@@ -7,17 +7,22 @@ namespace Tactics
 {
     public class Root : MonoBehaviour
     {
+        [SerializeField] private Battle.BattleManager battleManager = null;
+        [SerializeField] private View.LevelView levelView = null;
+
         private static Root _instance;
 
         void Awake()
         {
             _instance = this;
-            DG.Tweening.DOTween.SetTweensCapacity(500, 100);
         }
 
         void Start()
         {
-            print(gameObject.name);
+            levelView.Init(battleManager);
+
+            var selectedUnits = new List<UnitType>() { UnitType.Bard, UnitType.DamageDealer };
+            battleManager.StartBattle(selectedUnits);
         }
     }
 }
