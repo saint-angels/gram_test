@@ -3,6 +3,8 @@ using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using Tactics.SharedData;
+using Tactics.Windows;
+using Tactics.Configs;
 
 namespace Tactics
 {
@@ -15,6 +17,9 @@ namespace Tactics
         [SerializeField] private CameraController cameraController = null;
         [SerializeField] private BattleHUD battleHUD = null;
         [SerializeField] private InputController inputController = null;
+
+        [SerializeField] private UnitSelectionWindow unitSelectionWindow = null;
+        [SerializeField] private UnitsCollectionConfig unitsCollectionConfig = null;
 
         private static Root _instance;
 
@@ -29,9 +34,11 @@ namespace Tactics
             battleHUD.Init(battleManager, CameraController);
             battleManager.Init(inputController);
 
-            var selectedUnits = new List<UnitType>() { UnitType.Bard, UnitType.DamageDealer };
-            var enemyUnits = new List<UnitType>() { UnitType.Bard };
-            battleManager.StartBattle(selectedUnits, enemyUnits);
+            unitSelectionWindow.Init(unitsCollectionConfig.startingStates);
+
+            // var selectedUnits = new List<UnitType>() { UnitType.Bard, UnitType.DamageDealer };
+            // var enemyUnits = new List<UnitType>() { UnitType.Bard };
+            // battleManager.StartBattle(selectedUnits, enemyUnits);
         }
     }
 }

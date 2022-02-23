@@ -5,7 +5,7 @@ using Tactics.Helpers.ObjectPool;
 using Tactics.Windows.Elements;
 using UnityEngine;
 
-namespace Tactics
+namespace Tactics.Windows
 {
     public class BattleHUD : MonoBehaviour
     {

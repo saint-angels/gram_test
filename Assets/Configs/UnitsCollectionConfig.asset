@@ -12,3 +12,22 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f8d4589a293f87e86bf3abb263142dce, type: 3}
   m_Name: UnitsCollectionConfig
   m_EditorClassIdentifier: 
+  startingStates:
+  - unitType: 1
+    unitParams:
+      maxHealth: 10
+      attack: 2
+      experience: 0
+      level: 1
+  - unitType: 2
+    unitParams:
+      maxHealth: 5
+      attack: 10
+      experience: 0
+      level: 1
+  - unitType: 3
+    unitParams:
+      maxHealth: 1
+      attack: 1
+      experience: 0
+      level: 1
