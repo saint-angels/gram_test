@@ -24,7 +24,7 @@ namespace Tactics
         void Start()
         {
             levelView.Init(battleManager);
-            battleHUD.Init(battleManager);
+            battleHUD.Init(battleManager, CameraController);
 
             var selectedUnits = new List<UnitType>() { UnitType.Bard, UnitType.DamageDealer };
             battleManager.StartBattle(selectedUnits);
