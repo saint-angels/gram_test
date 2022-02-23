@@ -40,10 +40,10 @@ namespace Tactics
                         {
                             unitsHealth[unit].SetValue(healthValue, unit.MaxHealth);
                         };
-                        unit.OnDeath += () =>
+                        unit.OnDeath += (deadUnit) =>
                         {
-                            ObjectPool.Despawn(unitsHealth[unit], true);
-                            unitsHealth.Remove(unit);
+                            ObjectPool.Despawn(unitsHealth[deadUnit], true);
+                            unitsHealth.Remove(deadUnit);
                         };
                     }
                 }

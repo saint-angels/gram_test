@@ -57,6 +57,18 @@ namespace Tactics.Battle
                         }
 
                     };
+                    unit.OnDeath += (deadUnit) =>
+                    {
+                        var allies = faction switch
+                        {
+                            Faction.User => unitsUser,
+                            Faction.Enemy => unitsEnemy,
+                            _ => throw new Exception($"Unexpected faction {faction}!"),
+                        };
+                        allies.Remove(deadUnit);
+                        Destroy(deadUnit.gameObject);
+
+                    };
                     unit.Init(faction);
                     switch (faction)
                     {

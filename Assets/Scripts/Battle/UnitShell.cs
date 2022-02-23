@@ -11,7 +11,7 @@ namespace Tactics.Battle
         public IStatefulEvent<int> HealthState => healthState;
 
         public event Action<UnitShell, int> OnAttack;
-        public event Action OnDeath;
+        public event Action<UnitShell> OnDeath;
 
         private readonly StatefulEventInt<int> healthState = StatefulEventInt.Create(0);
 
@@ -37,7 +37,7 @@ namespace Tactics.Battle
             healthState.Set(newHealth);
             if (newHealth == 0)
             {
-                OnDeath?.Invoke();
+                OnDeath?.Invoke(this);
             }
         }
     }
