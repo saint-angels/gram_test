@@ -29,7 +29,8 @@ namespace Tactics
             battleManager.Init(inputController);
 
             var selectedUnits = new List<UnitType>() { UnitType.Bard, UnitType.DamageDealer };
-            battleManager.StartBattle(selectedUnits);
+            var enemyUnits = new List<UnitType>() { UnitType.Bard };
+            battleManager.StartBattle(selectedUnits, enemyUnits);
         }
     }
 }

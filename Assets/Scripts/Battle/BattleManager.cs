@@ -17,17 +17,19 @@ namespace Tactics.Battle
         {
             input.OnUnitClick += (unit) =>
             {
-                //Check for the correct state of the battle
-                unit.Attack();
+                if (unit.Faction == Faction.User)
+                {
+                    unit.Attack();
+                }
             };
         }
 
-        public void StartBattle(List<UnitType> selectedUnits)
+        public void StartBattle(List<UnitType> selectedUnits, List<UnitType> enemyUnitTypes)
         {
             unitsUser = new List<UnitShell>();
             unitsEnemy = new List<UnitShell>();
             InitUnitsForFaction(Faction.User, selectedUnits);
-            InitUnitsForFaction(Faction.Enemy, selectedUnits);
+            InitUnitsForFaction(Faction.Enemy, enemyUnitTypes);
 
             OnBattleInit?.Invoke(unitsUser, unitsEnemy);
 
@@ -56,6 +58,10 @@ namespace Tactics.Battle
                             opposingUnits[0].Damage(damage);
                         }
 
+                        if (opposingUnits.Count == 0)
+                        {
+                            print($"{unit.Faction} won the battle");
+                        }
                     };
                     unit.OnDeath += (deadUnit) =>
                     {
