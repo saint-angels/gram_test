@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using Tactics.Helpers.StatefulEvent;
+using Tactics.SharedData;
 using UnityEngine;
 
 namespace Tactics.Battle
@@ -15,14 +16,13 @@ namespace Tactics.Battle
 
         private readonly StatefulEventInt<int> healthState = StatefulEventInt.Create(0);
 
-        public int MaxHealth { get; private set; }
         public Faction Faction { get; private set; }
+        public UnitParams Params { get; private set; }
 
-        public void Init(Faction faction)
+        public void Init(Faction faction, UnitParams unitParams)
         {
             this.Faction = faction;
-            MaxHealth = 10;
-            healthState.Set(10);
+            healthState.Set(unitParams.maxHealth);
         }
 
         public void Attack()
@@ -33,7 +33,7 @@ namespace Tactics.Battle
         public void Damage(int damage)
         {
             int newHealth = healthState.Value - damage;
-            newHealth = Mathf.Clamp(newHealth, 0, MaxHealth);
+            newHealth = Mathf.Clamp(newHealth, 0, Params.maxHealth);
             healthState.Set(newHealth);
             if (newHealth == 0)
             {

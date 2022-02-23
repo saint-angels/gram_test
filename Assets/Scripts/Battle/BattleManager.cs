@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Tactics.SharedData;
 using UnityEngine;
 
 namespace Tactics.Battle
@@ -33,6 +34,7 @@ namespace Tactics.Battle
 
             OnBattleInit?.Invoke(unitsUser, unitsEnemy);
 
+
             void InitUnitsForFaction(Faction faction, List<UnitType> units)
             {
                 foreach (UnitType selectedType in units)
@@ -62,6 +64,10 @@ namespace Tactics.Battle
                         {
                             print($"{unit.Faction} won the battle");
                         }
+                        else if (attacker.Faction == Faction.User)
+                        {
+                            unitsEnemy[0].Attack();
+                        }
                     };
                     unit.OnDeath += (deadUnit) =>
                     {
@@ -75,7 +81,7 @@ namespace Tactics.Battle
                         Destroy(deadUnit.gameObject);
 
                     };
-                    unit.Init(faction);
+                    unit.Init(faction, new UnitParams());
                     switch (faction)
                     {
                         case Faction.User:

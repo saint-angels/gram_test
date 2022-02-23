@@ -33,12 +33,12 @@ namespace Tactics
                     {
                         UnitShell unit = units[i];
                         Healthbar healthBar = ObjectPool.Spawn(healthbarPrefab, Vector3.zero, Quaternion.identity, transform, true);
-                        healthBar.SetValue(unit.HealthState.Value, unit.MaxHealth);
+                        healthBar.SetValue(unit.HealthState.Value, unit.Params.maxHealth);
                         unitsHealth.Add(unit, healthBar);
 
                         unit.HealthState.OnValueChanged += (healthValue) =>
                         {
-                            unitsHealth[unit].SetValue(healthValue, unit.MaxHealth);
+                            unitsHealth[unit].SetValue(healthValue, unit.Params.maxHealth);
                         };
                         unit.OnDeath += (deadUnit) =>
                         {

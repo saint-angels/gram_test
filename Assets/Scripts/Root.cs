@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
+using Tactics.SharedData;
 
 namespace Tactics
 {
