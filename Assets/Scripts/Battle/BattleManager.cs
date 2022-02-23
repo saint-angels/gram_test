@@ -13,6 +13,15 @@ namespace Tactics.Battle
         private List<UnitShell> unitsUser;
         private List<UnitShell> unitsEnemy;
 
+        public void Init(InputController input)
+        {
+            input.OnUnitClick += (unit) =>
+            {
+                //Check for the correct state of the battle
+                unit.Attack();
+            };
+        }
+
         public void StartBattle(List<UnitType> selectedUnits)
         {
             unitsUser = new List<UnitShell>();
@@ -29,7 +38,26 @@ namespace Tactics.Battle
                     UnitShell unitPrefab = Resources.Load<UnitShell>($"Units/{selectedType}");
 
                     UnitShell unit = GameObject.Instantiate(unitPrefab, Vector3.zero, Quaternion.identity, unitContainer);
-                    unit.Init();
+                    unit.OnAttack += (attacker, damage) =>
+                    {
+                        var opposingUnits = faction switch
+                        {
+                            Faction.User => unitsEnemy,
+                            Faction.Enemy => unitsUser,
+                            _ => throw new Exception($"Unexpected faction {faction}!"),
+                        };
+
+                        if (opposingUnits.Count == 0)
+                        {
+                            Debug.LogError($"{unit.Faction} has no units to attack!");
+                        }
+                        else
+                        {
+                            opposingUnits[0].Damage(damage);
+                        }
+
+                    };
+                    unit.Init(faction);
                     switch (faction)
                     {
                         case Faction.User:

@@ -7,6 +7,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 4631426353923543793, guid: 1edcce1281d75abea9ad2e5c07908f9c, type: 3}
+      propertyPath: m_Sprite
+      value: 
+      objectReference: {fileID: 6489220211478588827, guid: ce0630490fe7ea520b568172710dc477, type: 3}
     - target: {fileID: 4631426355945167824, guid: 1edcce1281d75abea9ad2e5c07908f9c, type: 3}
       propertyPath: m_RootOrder
       value: 0
@@ -53,7 +57,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4631426355945167827, guid: 1edcce1281d75abea9ad2e5c07908f9c, type: 3}
       propertyPath: m_Name
-      value: UnitBard
+      value: DamageDealer
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 1edcce1281d75abea9ad2e5c07908f9c, type: 3}

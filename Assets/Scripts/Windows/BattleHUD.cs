@@ -29,8 +29,9 @@ namespace Tactics
 
                 void InitForUnits(List<UnitShell> units)
                 {
-                    foreach (var unit in units)
+                    for (int i = 0; i < units.Count; i++)
                     {
+                        UnitShell unit = units[i];
                         Healthbar healthBar = ObjectPool.Spawn(healthbarPrefab, Vector3.zero, Quaternion.identity, transform, true);
                         healthBar.SetValue(unit.HealthState.Value, unit.MaxHealth);
                         unitsHealth.Add(unit, healthBar);
@@ -39,10 +40,10 @@ namespace Tactics
                         {
                             unitsHealth[unit].SetValue(healthValue, unit.MaxHealth);
                         };
-                        unit.OnDeath += (deadUnit) =>
+                        unit.OnDeath += () =>
                         {
-                            ObjectPool.Despawn(unitsHealth[deadUnit]);
-                            unitsHealth.Remove(deadUnit);
+                            ObjectPool.Despawn(unitsHealth[unit], true);
+                            unitsHealth.Remove(unit);
                         };
                     }
                 }
@@ -56,7 +57,7 @@ namespace Tactics
             {
                 var unit = kvp.Key;
                 Healthbar healthbar = kvp.Value;
-                Vector2 screenPoint = cameraController.WorldToScreenPoint(unit.transform.position + Vector3.up * multiplier);
+                Vector2 screenPoint = cameraController.WorldToScreenPoint(unit.transform.position + Vector3.up * 0.6f);
                 Vector2 localPoint;
                 if (RectTransformUtility.ScreenPointToLocalPointInRectangle(healthbarContainerRect, screenPoint, null, out localPoint))
                 {
