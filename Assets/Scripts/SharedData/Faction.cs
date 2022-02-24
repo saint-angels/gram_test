@@ -8,6 +8,6 @@ namespace Tactics
     {
         None,
         User,
-        Enemy
+        AI
     }
 }

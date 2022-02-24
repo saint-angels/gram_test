@@ -13,7 +13,7 @@ namespace Tactics.Battle
         [SerializeField] private Transform unitContainer;
 
         private List<UnitShell> unitsUser;
-        private List<UnitShell> unitsEnemy;
+        private List<UnitShell> unitsAI;
 
         public void Init(InputController input)
         {
@@ -26,14 +26,14 @@ namespace Tactics.Battle
             };
         }
 
-        public void StartBattle(UnitState[] selectedUnits, UnitState[] enemyUnitTypes)
+        public void StartBattle(UnitState[] userUnitStates, UnitState[] aiUnitStates)
         {
             unitsUser = new List<UnitShell>();
-            unitsEnemy = new List<UnitShell>();
-            InitUnitsForFaction(Faction.User, selectedUnits);
-            InitUnitsForFaction(Faction.Enemy, enemyUnitTypes);
+            unitsAI = new List<UnitShell>();
+            InitUnitsForFaction(Faction.User, userUnitStates);
+            InitUnitsForFaction(Faction.AI, aiUnitStates);
 
-            OnBattleInit?.Invoke(unitsUser, unitsEnemy);
+            OnBattleInit?.Invoke(unitsUser, unitsAI);
 
 
             void InitUnitsForFaction(Faction faction, UnitState[] units)
@@ -47,8 +47,8 @@ namespace Tactics.Battle
                     {
                         var opposingUnits = faction switch
                         {
-                            Faction.User => unitsEnemy,
-                            Faction.Enemy => unitsUser,
+                            Faction.User => unitsAI,
+                            Faction.AI => unitsUser,
                             _ => throw new Exception($"Unexpected faction {faction}!"),
                         };
 
@@ -67,7 +67,7 @@ namespace Tactics.Battle
                         }
                         else if (attacker.Faction == Faction.User)
                         {
-                            unitsEnemy[0].Attack();
+                            unitsAI[0].Attack();
                         }
                     };
                     unit.OnDeath += (deadUnit) =>
@@ -83,8 +83,8 @@ namespace Tactics.Battle
                         case Faction.User:
                             unitsUser.Add(unit);
                             break;
-                        case Faction.Enemy:
-                            unitsEnemy.Add(unit);
+                        case Faction.AI:
+                            unitsAI.Add(unit);
                             break;
                         default:
                             break;
@@ -96,7 +96,7 @@ namespace Tactics.Battle
                     var units = faction switch
                     {
                         Faction.User => unitsUser,
-                        Faction.Enemy => unitsEnemy,
+                        Faction.AI => unitsAI,
                         _ => throw new Exception($"Unexpected faction {faction}!"),
                     };
                     return units;
@@ -109,7 +109,7 @@ namespace Tactics.Battle
                     {
                         case Faction.User:
                             break;
-                        case Faction.Enemy:
+                        case Faction.AI:
                             break;
                         default:
                             throw new Exception($"Unexpected faction {faction}!");
@@ -123,9 +123,9 @@ namespace Tactics.Battle
 
                         unit.Die();
                     }
-                    for (int i = unitsEnemy.Count - 1; i >= 0; i--)
+                    for (int i = unitsAI.Count - 1; i >= 0; i--)
                     {
-                        UnitShell unit = unitsEnemy[i];
+                        UnitShell unit = unitsAI[i];
                         unit.Die();
                     }
 

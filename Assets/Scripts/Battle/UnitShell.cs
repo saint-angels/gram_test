@@ -24,12 +24,13 @@ namespace Tactics.Battle
         {
             this.Faction = faction;
             this.UnitType = unitType;
+            this.Params = unitParams;
             healthState.Set(unitParams.maxHealth);
         }
 
         public void Attack()
         {
-            OnAttack(this, 1);
+            OnAttack?.Invoke(this, Params.attack);
         }
 
         public void Damage(int damage)
