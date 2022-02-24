@@ -25,7 +25,7 @@ namespace Tactics.Battle
             };
         }
 
-        public void StartBattle(List<UnitType> selectedUnits, List<UnitType> enemyUnitTypes)
+        public void StartBattle(UnitState[] selectedUnits, UnitState[] enemyUnitTypes)
         {
             unitsUser = new List<UnitShell>();
             unitsEnemy = new List<UnitShell>();
@@ -35,11 +35,11 @@ namespace Tactics.Battle
             OnBattleInit?.Invoke(unitsUser, unitsEnemy);
 
 
-            void InitUnitsForFaction(Faction faction, List<UnitType> units)
+            void InitUnitsForFaction(Faction faction, UnitState[] units)
             {
-                foreach (UnitType selectedType in units)
+                foreach (UnitState unitState in units)
                 {
-                    UnitShell unitPrefab = Resources.Load<UnitShell>($"Units/{selectedType}");
+                    UnitShell unitPrefab = Resources.Load<UnitShell>($"Units/{unitState.unitType}");
 
                     UnitShell unit = GameObject.Instantiate(unitPrefab, Vector3.zero, Quaternion.identity, unitContainer);
                     unit.OnAttack += (attacker, damage) =>
@@ -81,7 +81,7 @@ namespace Tactics.Battle
                         Destroy(deadUnit.gameObject);
 
                     };
-                    unit.Init(faction, new UnitParams());
+                    unit.Init(faction, unitState.unitParams);
                     switch (faction)
                     {
                         case Faction.User:

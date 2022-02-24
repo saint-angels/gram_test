@@ -355,8 +355,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 60e03ff6f59cdc627b86495f156eae69, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  unitSelectionButtonPrefab: {fileID: 5947173971133611277, guid: 2afdc5897fe1cd45d98a6f91c11362f8, type: 3}
+  unitSelectionButtonPrefab: {fileID: 5589780969851013358, guid: 2afdc5897fe1cd45d98a6f91c11362f8, type: 3}
   unitSelectionButtonContainer: {fileID: 1082072457}
+  startBattleButton: {fileID: 260212945}
 --- !u!1 &379132825
 GameObject:
   m_ObjectHideFlags: 0

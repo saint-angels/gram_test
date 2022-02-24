@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using Tactics.Battle;
@@ -11,13 +12,28 @@ namespace Tactics.Windows
 {
     public class UnitSelectionWindow : MonoBehaviour
     {
+        public event Action<UnitState[]> OnUnitsSelected;
+
         [SerializeField] private UnitSelectionButton unitSelectionButtonPrefab = null;
         [SerializeField] private RectTransform unitSelectionButtonContainer = null;
         [SerializeField] private Button startBattleButton = null;
 
         private List<UnitSelectionButton> unitSelectionButtons = new List<UnitSelectionButton>();
-
         private List<UnitSelectionButton> selectedButtons = new List<UnitSelectionButton>();
+
+        private void Awake()
+        {
+            startBattleButton.onClick.AddListener(() =>
+            {
+                var selectedUnits = new UnitState[selectedButtons.Count];
+                for (int i = 0; i < selectedButtons.Count; i++)
+                {
+                    UnitSelectionButton button = selectedButtons[i];
+                    selectedUnits[i] = button.UnitState;
+                }
+                OnUnitsSelected(selectedUnits);
+            });
+        }
 
         public void Init(UnitState[] availableUnits)
         {

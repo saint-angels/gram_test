@@ -20,6 +20,7 @@ namespace Tactics
 
         [SerializeField] private UnitSelectionWindow unitSelectionWindow = null;
         [SerializeField] private UnitsCollectionConfig unitsCollectionConfig = null;
+        [SerializeField] private EnemyUnitsConfig enemiesConfig = null;
 
         private static Root _instance;
 
@@ -35,10 +36,12 @@ namespace Tactics
             battleManager.Init(inputController);
 
             unitSelectionWindow.Init(unitsCollectionConfig.startingStates);
+            unitSelectionWindow.OnUnitsSelected += (selectedUnits) =>
+            {
+                var enemyStates = new UnitState[] { enemiesConfig.enemyStates[0] };
+                battleManager.StartBattle(selectedUnits, enemyStates);
+            };
 
-            // var selectedUnits = new List<UnitType>() { UnitType.Bard, UnitType.DamageDealer };
-            // var enemyUnits = new List<UnitType>() { UnitType.Bard };
-            // battleManager.StartBattle(selectedUnits, enemyUnits);
         }
     }
 }
