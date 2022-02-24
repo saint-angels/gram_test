@@ -30,6 +30,7 @@ namespace Tactics
         [SerializeField] private UnitsCollectionConfig unitsCollectionConfig = null;
         [SerializeField] private EnemyUnitsConfig enemiesConfig = null;
         [SerializeField] private UIManager uiManager = null;
+        [SerializeField] private LocalCacheManager cacheManager = null;
 
         private static Root _instance;
 
@@ -53,7 +54,25 @@ namespace Tactics
 
             void GoMeta()
             {
-                var unitSelectionWindow = uiManager.ShowUnitSelection(unitsCollectionConfig.startingStates);
+                UserSaveState saveState;
+                if (cacheManager.FileExists<UserSaveState>())
+                {
+                    saveState = cacheManager.Load<UserSaveState>();
+                }
+                else
+                {
+                    saveState = new UserSaveState()
+                    {
+                        availableUnits = new UnitState[]
+                        {
+                            unitsCollectionConfig.startingStates[0],
+                            unitsCollectionConfig.startingStates[1],
+                            unitsCollectionConfig.startingStates[2],
+                        }
+                    };
+                }
+
+                var unitSelectionWindow = uiManager.ShowUnitSelection(saveState.availableUnits);
                 unitSelectionWindow.OnUnitsSelected += (selectedUnits) =>
                 {
                     GoBattle(selectedUnits);

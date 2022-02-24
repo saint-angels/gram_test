@@ -12,4 +12,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4e1526dd3f6c3483590e543eeacbad31, type: 3}
   m_Name: EnemyUnitsConfig
   m_EditorClassIdentifier: 
-  enemyStates: []
+  enemyStates:
+  - unitType: 1
+    unitParams:
+      maxHealth: 10
+      attack: 1
+      experience: 0
+      level: 0
