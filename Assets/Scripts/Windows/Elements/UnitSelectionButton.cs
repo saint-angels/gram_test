@@ -9,7 +9,7 @@ namespace Tactics.Windows.Elements
 {
     public class UnitSelectionButton : MonoBehaviour
     {
-        public event Action<UnitSelectionButton, UnitState> OnClicked;
+        public event Action<UnitSelectionButton> OnClicked;
 
         [SerializeField] private GameObject selectionFrame = null;
         [SerializeField] private Button button = null;
@@ -20,12 +20,14 @@ namespace Tactics.Windows.Elements
         {
             button.onClick.AddListener(() =>
             {
-                OnClicked?.Invoke(this, UnitState);
+                OnClicked?.Invoke(this);
             });
         }
 
         public void Init(UnitState unitState)
         {
+            //Clear previous subscriptions
+            OnClicked = null;
             this.UnitState = unitState;
             SetFrameVisible(false);
         }

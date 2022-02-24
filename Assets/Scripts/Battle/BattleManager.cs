@@ -8,6 +8,7 @@ namespace Tactics.Battle
 {
     public class BattleManager : MonoBehaviour
     {
+        public event Action<List<UnitShell>> OnUserUnitsSurvived;
         public event Action<List<UnitShell>, List<UnitShell>> OnBattleInit;
         [SerializeField] private Transform unitContainer;
 
@@ -62,7 +63,7 @@ namespace Tactics.Battle
 
                         if (opposingUnits.Count == 0)
                         {
-                            print($"{unit.Faction} won the battle");
+                            HandleBattleOver(unit.Faction);
                         }
                         else if (attacker.Faction == Faction.User)
                         {
@@ -71,12 +72,7 @@ namespace Tactics.Battle
                     };
                     unit.OnDeath += (deadUnit) =>
                     {
-                        var allies = faction switch
-                        {
-                            Faction.User => unitsUser,
-                            Faction.Enemy => unitsEnemy,
-                            _ => throw new Exception($"Unexpected faction {faction}!"),
-                        };
+                        var allies = GetFactionUnits(faction);
                         allies.Remove(deadUnit);
                         Destroy(deadUnit.gameObject);
 
@@ -93,6 +89,33 @@ namespace Tactics.Battle
                         default:
                             break;
                     }
+                }
+
+                List<UnitShell> GetFactionUnits(Faction faction)
+                {
+                    var units = faction switch
+                    {
+                        Faction.User => unitsUser,
+                        Faction.Enemy => unitsEnemy,
+                        _ => throw new Exception($"Unexpected faction {faction}!"),
+                    };
+                    return units;
+                }
+
+                void HandleBattleOver(Faction winnerFaction)
+                {
+                    print($"{winnerFaction} won the battle");
+                    switch (winnerFaction)
+                    {
+                        case Faction.User:
+                            break;
+                        case Faction.Enemy:
+                            break;
+                        default:
+                            throw new Exception($"Unexpected faction {faction}!");
+                    }
+
+                    OnUserUnitsSurvived?.Invoke(unitsUser);
                 }
             }
         }

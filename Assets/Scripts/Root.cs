@@ -44,6 +44,10 @@ namespace Tactics
         {
             levelView.Init(battleManager);
             battleManager.Init(inputController);
+            battleManager.OnUserUnitsSurvived += (survivedUserUnits) =>
+            {
+                GoMeta();
+            };
 
             GoMeta();
 
@@ -61,7 +65,6 @@ namespace Tactics
                 uiManager.ShowHUD(battleManager, CameraController);
                 var enemyStates = new UnitState[] { enemiesConfig.enemyStates[0] };
                 battleManager.StartBattle(selectedUnits, enemyStates);
-                //Subscribe to battle results
             }
         }
     }

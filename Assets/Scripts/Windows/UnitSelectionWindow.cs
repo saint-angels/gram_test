@@ -18,7 +18,7 @@ namespace Tactics.Windows
         [SerializeField] private RectTransform unitSelectionButtonContainer = null;
         [SerializeField] private Button startBattleButton = null;
 
-        private List<UnitSelectionButton> unitSelectionButtons = new List<UnitSelectionButton>();
+        private List<UnitSelectionButton> unitButtons = new List<UnitSelectionButton>();
         private List<UnitSelectionButton> selectedButtons = new List<UnitSelectionButton>();
 
         private void Awake()
@@ -43,27 +43,37 @@ namespace Tactics.Windows
 
                 var button = ObjectPool.Spawn(unitSelectionButtonPrefab, Vector3.zero, Quaternion.identity, unitSelectionButtonContainer, true);
                 button.Init(unitState);
-                button.OnClicked += (clickedButton, clickedUnitState) =>
+                button.OnClicked += (clickedButton) => SelectUnitButton(clickedButton);
+                unitButtons.Add(button);
+
+                bool isPartOfDefaultSelection = i < 3;
+                if (isPartOfDefaultSelection)
                 {
-                    bool isSelectingUnit = selectedButtons.Contains(clickedButton) == false && selectedButtons.Count < 3;
-                    if (isSelectingUnit)
-                    {
-                        selectedButtons.Add(clickedButton);
-                    }
-                    else
-                    {
-                        selectedButtons.Remove(clickedButton);
-                    }
-                    clickedButton.SetFrameVisible(isSelectingUnit);
-                    startBattleButton.interactable = selectedButtons.Count == 3;
-                };
+                    SelectUnitButton(button);
+                }
+            }
+
+            void SelectUnitButton(UnitSelectionButton clickedButton)
+            {
+                bool isSelectingUnit = selectedButtons.Contains(clickedButton) == false && selectedButtons.Count < 3;
+                if (isSelectingUnit)
+                {
+                    selectedButtons.Add(clickedButton);
+                }
+                else
+                {
+                    selectedButtons.Remove(clickedButton);
+                }
+                clickedButton.SetFrameVisible(isSelectingUnit);
+                startBattleButton.interactable = selectedButtons.Count == 3;
             }
         }
 
         public void Clear()
         {
+            print("clearing buttons!");
             //Clear previously spawned buttons
-            foreach (var button in unitSelectionButtons)
+            foreach (var button in unitButtons)
             {
                 ObjectPool.Despawn(button, true);
             }
