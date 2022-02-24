@@ -16,39 +16,14 @@ namespace Tactics.Windows
 
         private Dictionary<UnitShell, Healthbar> unitsHealth;
         private CameraController cameraController;
+        private BattleManager battleManager;
 
         public void Init(Battle.BattleManager battleManager, CameraController cameraController)
         {
             this.cameraController = cameraController;
+            this.battleManager = battleManager;
+            battleManager.OnBattleInit += HandleBattleInit;
             unitsHealth = new Dictionary<UnitShell, Healthbar>();
-
-            battleManager.OnBattleInit += (userUnits, enemyUnits) =>
-            {
-                InitForUnits(userUnits);
-                InitForUnits(enemyUnits);
-
-                void InitForUnits(List<UnitShell> units)
-                {
-                    for (int i = 0; i < units.Count; i++)
-                    {
-                        UnitShell unit = units[i];
-                        Healthbar healthBar = ObjectPool.Spawn(healthbarPrefab, Vector3.zero, Quaternion.identity, transform, true);
-                        healthBar.SetValue(unit.HealthState.Value, unit.Params.maxHealth);
-                        unitsHealth.Add(unit, healthBar);
-
-                        unit.HealthState.OnValueChanged += (healthValue) =>
-                        {
-                            unitsHealth[unit].SetValue(healthValue, unit.Params.maxHealth);
-                        };
-                        unit.OnDeath += (deadUnit) =>
-                        {
-                            ObjectPool.Despawn(unitsHealth[deadUnit], true);
-                            unitsHealth.Remove(deadUnit);
-                        };
-                    }
-                }
-            };
-
         }
 
         public void Clear()
@@ -61,6 +36,11 @@ namespace Tactics.Windows
                     ObjectPool.Despawn(healthbar, true);
                 }
                 unitsHealth.Clear();
+            }
+
+            if (battleManager != null)
+            {
+                battleManager.OnBattleInit -= HandleBattleInit;
             }
         }
 
@@ -75,6 +55,33 @@ namespace Tactics.Windows
                 if (RectTransformUtility.ScreenPointToLocalPointInRectangle(healthbarContainerRect, screenPoint, null, out localPoint))
                 {
                     healthbar.transform.localPosition = localPoint;
+                }
+            }
+        }
+
+        private void HandleBattleInit(List<UnitShell> userUnits, List<UnitShell> enemyUnits)
+        {
+            InitForUnits(userUnits);
+            InitForUnits(enemyUnits);
+
+            void InitForUnits(List<UnitShell> units)
+            {
+                for (int i = 0; i < units.Count; i++)
+                {
+                    UnitShell unit = units[i];
+                    Healthbar healthBar = ObjectPool.Spawn(healthbarPrefab, Vector3.zero, Quaternion.identity, transform, true);
+                    healthBar.SetValue(unit.HealthState.Value, unit.Params.maxHealth);
+                    unitsHealth.Add(unit, healthBar);
+
+                    unit.HealthState.OnValueChanged += (healthValue) =>
+                    {
+                        unitsHealth[unit].SetValue(healthValue, unit.Params.maxHealth);
+                    };
+                    unit.OnDeath += (deadUnit) =>
+                    {
+                        ObjectPool.Despawn(unitsHealth[deadUnit], true);
+                        unitsHealth.Remove(deadUnit);
+                    };
                 }
             }
         }

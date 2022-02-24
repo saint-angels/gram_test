@@ -17,11 +17,13 @@ namespace Tactics.Battle
         private readonly StatefulEventInt<int> healthState = StatefulEventInt.Create(0);
 
         public Faction Faction { get; private set; }
+        public UnitType UnitType { get; private set; }
         public UnitParams Params { get; private set; }
 
-        public void Init(Faction faction, UnitParams unitParams)
+        public void Init(Faction faction, UnitType unitType, UnitParams unitParams)
         {
             this.Faction = faction;
+            this.UnitType = unitType;
             healthState.Set(unitParams.maxHealth);
         }
 
@@ -37,8 +39,13 @@ namespace Tactics.Battle
             healthState.Set(newHealth);
             if (newHealth == 0)
             {
-                OnDeath?.Invoke(this);
+                Die();
             }
+        }
+
+        public void Die()
+        {
+            OnDeath?.Invoke(this);
         }
     }
 }

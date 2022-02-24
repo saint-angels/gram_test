@@ -8,7 +8,7 @@ namespace Tactics.Battle
 {
     public class BattleManager : MonoBehaviour
     {
-        public event Action<List<UnitShell>> OnUserUnitsSurvived;
+        public event Action<UnitType[]> OnUserUnitsSurvived;
         public event Action<List<UnitShell>, List<UnitShell>> OnBattleInit;
         [SerializeField] private Transform unitContainer;
 
@@ -77,7 +77,7 @@ namespace Tactics.Battle
                         Destroy(deadUnit.gameObject);
 
                     };
-                    unit.Init(faction, unitState.unitParams);
+                    unit.Init(faction, unitState.unitType, unitState.unitParams);
                     switch (faction)
                     {
                         case Faction.User:
@@ -115,7 +115,21 @@ namespace Tactics.Battle
                             throw new Exception($"Unexpected faction {faction}!");
                     }
 
-                    OnUserUnitsSurvived?.Invoke(unitsUser);
+                    var survivedUnitTypes = new UnitType[unitsUser.Count];
+                    for (int i = unitsUser.Count - 1; i >= 0; i--)
+                    {
+                        UnitShell unit = unitsUser[i];
+                        survivedUnitTypes[i] = unit.UnitType;
+
+                        unit.Die();
+                    }
+                    for (int i = unitsEnemy.Count - 1; i >= 0; i--)
+                    {
+                        UnitShell unit = unitsEnemy[i];
+                        unit.Die();
+                    }
+
+                    OnUserUnitsSurvived?.Invoke(survivedUnitTypes);
                 }
             }
         }
