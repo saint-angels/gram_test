@@ -37,13 +37,6 @@ namespace Tactics.Windows
 
         public void Init(UnitState[] availableUnits)
         {
-            //Clear previously spawned buttons
-            foreach (var button in unitSelectionButtons)
-            {
-                ObjectPool.Despawn(button, true);
-            }
-            selectedButtons.Clear();
-
             for (int i = 0; i < availableUnits.Length; i++)
             {
                 UnitState unitState = availableUnits[i];
@@ -65,6 +58,18 @@ namespace Tactics.Windows
                     startBattleButton.interactable = selectedButtons.Count == 3;
                 };
             }
+        }
+
+        public void Clear()
+        {
+            //Clear previously spawned buttons
+            foreach (var button in unitSelectionButtons)
+            {
+                ObjectPool.Despawn(button, true);
+            }
+            selectedButtons.Clear();
+
+            OnUnitsSelected = null;
         }
     }
 }

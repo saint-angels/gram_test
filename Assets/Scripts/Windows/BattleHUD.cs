@@ -11,10 +11,10 @@ namespace Tactics.Windows
     {
         [SerializeField] private Healthbar healthbarPrefab = null;
         [SerializeField] private RectTransform healthbarContainerRect = null;
+
         public float multiplier;
 
         private Dictionary<UnitShell, Healthbar> unitsHealth;
-
         private CameraController cameraController;
 
         public void Init(Battle.BattleManager battleManager, CameraController cameraController)
@@ -51,6 +51,19 @@ namespace Tactics.Windows
 
         }
 
+        public void Clear()
+        {
+            if (unitsHealth != null)
+            {
+                foreach (KeyValuePair<UnitShell, Healthbar> kvp in unitsHealth)
+                {
+                    Healthbar healthbar = kvp.Value;
+                    ObjectPool.Despawn(healthbar, true);
+                }
+                unitsHealth.Clear();
+            }
+        }
+
         void LateUpdate()
         {
             foreach (KeyValuePair<UnitShell, Healthbar> kvp in unitsHealth)
@@ -65,5 +78,6 @@ namespace Tactics.Windows
                 }
             }
         }
+
     }
 }
