@@ -22,6 +22,10 @@ namespace Tactics.Windows.Tooltips
             // Debug.Log(name + "pointer down");
             Debug.Log(name + "showing tooltip:" + text);
             // TooltipsController.ShowTooltip(windowRectTransform, rectTransform, title, text);
+
+            RectTransform rectTransform = GetComponent<RectTransform>();
+
+            TooltipController.ShowTooltip(rectTransform, text);
         }
 
         public void OnPointerUp(PointerEventData pointerEventData)

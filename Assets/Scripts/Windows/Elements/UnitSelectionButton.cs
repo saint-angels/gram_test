@@ -40,7 +40,8 @@ namespace Tactics.Windows.Elements
 
         public string GetTooltipText()
         {
-            return UnitState.unitParams.ToString();
+
+            return $"{UnitState.unitType}\nlevel:{UnitState.unitParams.level}\nattack:{UnitState.unitParams.level}\nexperience:{UnitState.unitParams.level}";
         }
     }
 }
