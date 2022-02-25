@@ -368,6 +368,7 @@ GameObject:
   m_Component:
   - component: {fileID: 379132826}
   - component: {fileID: 379132827}
+  - component: {fileID: 379132828}
   m_Layer: 0
   m_Name: Root
   m_TagString: Untagged
@@ -405,10 +406,23 @@ MonoBehaviour:
   battleManager: {fileID: 1241309743}
   levelView: {fileID: 958414809}
   cameraController: {fileID: 519420030}
-  battleHUD: {fileID: 1960707902}
   inputController: {fileID: 1781773693}
-  unitSelectionWindow: {fileID: 334861567}
   unitsCollectionConfig: {fileID: 11400000, guid: af87a0f815b5400deaa8613bbb44b069, type: 2}
+  enemiesConfig: {fileID: 11400000, guid: 7173a0a39f3c664469804acb6c789147, type: 2}
+  uiManager: {fileID: 1977768469}
+  cacheManager: {fileID: 379132828}
+--- !u!114 &379132828
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 379132825}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 13deeafa29a8075e0a809b149a64ba21, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &519420028
 GameObject:
   m_ObjectHideFlags: 0
@@ -1118,6 +1132,7 @@ GameObject:
   - component: {fileID: 1977768467}
   - component: {fileID: 1977768466}
   - component: {fileID: 1977768465}
+  - component: {fileID: 1977768469}
   m_Layer: 5
   m_Name: Canvas
   m_TagString: Untagged
@@ -1207,6 +1222,20 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0, y: 0}
+--- !u!114 &1977768469
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1977768464}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 78934678bd6ae858584856a58324ea0e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  unitSelectionWindow: {fileID: 334861567}
+  battleHUD: {fileID: 1960707902}
 --- !u!1 &2112418947
 GameObject:
   m_ObjectHideFlags: 0
