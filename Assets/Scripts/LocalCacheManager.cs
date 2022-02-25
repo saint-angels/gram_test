@@ -34,6 +34,7 @@ namespace Tactics
         public bool Save<T>(T data, bool allowOverwrite)
         {
             string filePath = GetFilePath<T>(jsonFileExtension);
+            print("saved to file path:" + filePath);
 
             return SaveAtPath<T>(data, filePath, allowOverwrite);
         }

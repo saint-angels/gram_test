@@ -88,6 +88,7 @@ GameObject:
   - component: {fileID: 3158047476537591845}
   - component: {fileID: 5947173971133611277}
   - component: {fileID: 5589780969851013358}
+  - component: {fileID: 8029117278641810145}
   m_Layer: 5
   m_Name: UnitSelectionButton
   m_TagString: Untagged
@@ -211,3 +212,16 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   selectionFrame: {fileID: 5230818875586891962}
   button: {fileID: 5947173971133611277}
+--- !u!114 &8029117278641810145
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7236810335182466686}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 660547d03db544a13a5086987f4294b4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  textProvider: {fileID: 7236810335182466686}

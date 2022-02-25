@@ -47,6 +47,22 @@ namespace Tactics
             battleManager.Init(inputController);
             battleManager.OnUserUnitsSurvived += (survivedUserUnits) =>
             {
+                UserSaveState saveState = GetUserSaveState();
+                foreach (UnitType unitType in survivedUserUnits)
+                {
+                    UnitState unitState = saveState.GetUnitForType(unitType);
+                    unitState.unitParams.experience++;
+                    //Level up the unit as much as possible
+                    while (5 <= unitState.unitParams.experience)
+                    {
+                        unitState.unitParams.experience -= 5;
+                        unitState.unitParams.level += 1;
+                        unitState.unitParams.attack += Mathf.FloorToInt(unitState.unitParams.attack * 0.1f);
+                        unitState.unitParams.maxHealth += Mathf.FloorToInt(unitState.unitParams.maxHealth * 0.1f);
+                    }
+                }
+                cacheManager.Save<UserSaveState>(saveState, allowOverwrite: true);
+
                 GoMeta();
             };
 
@@ -54,24 +70,7 @@ namespace Tactics
 
             void GoMeta()
             {
-                UserSaveState saveState;
-                if (cacheManager.FileExists<UserSaveState>())
-                {
-                    saveState = cacheManager.Load<UserSaveState>();
-                }
-                else
-                {
-                    saveState = new UserSaveState()
-                    {
-                        availableUnits = new UnitState[]
-                        {
-                            unitsCollectionConfig.startingStates[0],
-                            unitsCollectionConfig.startingStates[1],
-                            unitsCollectionConfig.startingStates[2],
-                        }
-                    };
-                }
-
+                var saveState = GetUserSaveState();
                 var unitSelectionWindow = uiManager.ShowUnitSelection(saveState.availableUnits);
                 unitSelectionWindow.OnUnitsSelected += (selectedUnits) =>
                 {
@@ -84,6 +83,20 @@ namespace Tactics
                 uiManager.ShowHUD(battleManager, CameraController);
                 var enemyStates = new UnitState[] { enemiesConfig.enemyStates[0] };
                 battleManager.StartBattle(selectedUnits, enemyStates);
+            }
+
+            UserSaveState GetUserSaveState()
+            {
+                UserSaveState saveState;
+                if (cacheManager.FileExists<UserSaveState>())
+                {
+                    saveState = cacheManager.Load<UserSaveState>();
+                }
+                else
+                {
+                    saveState = UserSaveState.Default(unitsCollectionConfig);
+                }
+                return saveState;
             }
         }
     }
