@@ -14,15 +14,20 @@ namespace Tactics.Windows.Tooltips
         private RectTransform ownerRectTransform;
         private RectTransform containerRectTransform;
 
+        private float visibleTimer;
+        private bool isVisible;
+
         public void Init()
         {
             canvas = GetComponentInParent<Canvas>();
             rectTransform = GetComponent<RectTransform>();
+            Hide();
         }
 
         public void Hide()
         {
             gameObject.SetActive(false);
+            isVisible = false;
         }
 
         public void Show(RectTransform ownerRectTransform, RectTransform containerRect, string tooltipText)
@@ -35,6 +40,9 @@ namespace Tactics.Windows.Tooltips
 
             SetupTooltipPosition(ownerRectTransform, rectTransform);
             gameObject.SetActive(true);
+
+            isVisible = true;
+            visibleTimer = 2f;
         }
 
         private void SetupTooltipPosition(RectTransform ownerRectTransform, RectTransform tooltipRectTransform)
@@ -63,9 +71,16 @@ namespace Tactics.Windows.Tooltips
             tooltipRectTransform.anchoredPosition = tooltipPosition;
         }
 
-        // Update is called once per frame
         void Update()
         {
+            if (isVisible)
+            {
+                visibleTimer -= Time.deltaTime;
+                if (visibleTimer <= 0)
+                {
+                    Hide();
+                }
+            }
 
         }
     }

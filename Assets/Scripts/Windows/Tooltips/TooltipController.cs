@@ -18,7 +18,6 @@ namespace Tactics.Windows.Tooltips
             tooltipsContainerRect = GetComponent<RectTransform>();
 
             tooltip.Init();
-            tooltip.Hide();
         }
 
         public static void ShowTooltip(RectTransform targetRect, string text)

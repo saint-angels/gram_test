@@ -13,7 +13,6 @@ namespace Tactics.Windows.Elements
         public event Action<UnitSelectionButton> OnClicked;
 
         [SerializeField] private GameObject selectionFrame = null;
-        [SerializeField] private Button button = null;
 
         public UnitState UnitState { get; private set; }
 
