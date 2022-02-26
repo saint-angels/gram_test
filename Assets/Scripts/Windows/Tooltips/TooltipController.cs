@@ -16,6 +16,9 @@ namespace Tactics.Windows.Tooltips
         {
             instance = this;
             tooltipsContainerRect = GetComponent<RectTransform>();
+
+            tooltip.Init();
+            tooltip.Hide();
         }
 
         public static void ShowTooltip(RectTransform targetRect, string text)
@@ -26,9 +29,7 @@ namespace Tactics.Windows.Tooltips
         private void ShowTooltipInternal(RectTransform targetRect, string text)
         {
             // RectTransformUtil.SnapToParent(tooltipsContainerRect, windowRect);
-
-            tooltip.Initialize(targetRect, tooltipsContainerRect, text);
-            tooltip.Show();
+            tooltip.Show(targetRect, tooltipsContainerRect, text);
             // transform.SetAsLastSibling();
         }
 

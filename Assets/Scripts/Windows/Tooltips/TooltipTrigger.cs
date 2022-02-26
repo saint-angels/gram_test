@@ -10,6 +10,10 @@ namespace Tactics.Windows.Tooltips
     {
         [SerializeField] GameObject textProvider;
 
+        private float pointerDownTimer;
+        private bool activatingTooltip;
+        private const float tooltipShowDelay = 3f;
+
         private void Awake()
         {
             RectTransform rectTransform = GetComponent<RectTransform>();
@@ -17,20 +21,35 @@ namespace Tactics.Windows.Tooltips
 
         public void OnPointerDown(PointerEventData eventData)
         {
-            ITooltipTextProvider provider = this.textProvider.GetComponent<ITooltipTextProvider>();
-            string text = provider.GetTooltipText();
-            // Debug.Log(name + "pointer down");
-            Debug.Log(name + "showing tooltip:" + text);
-            // TooltipsController.ShowTooltip(windowRectTransform, rectTransform, title, text);
-
-            RectTransform rectTransform = GetComponent<RectTransform>();
-
-            TooltipController.ShowTooltip(rectTransform, text);
+            pointerDownTimer = 0;
+            activatingTooltip = true;
         }
 
         public void OnPointerUp(PointerEventData pointerEventData)
         {
             // Debug.Log(name + "pointer up");
+            activatingTooltip = false;
+        }
+
+        private void Update()
+        {
+            if (activatingTooltip)
+            {
+                pointerDownTimer += Time.deltaTime;
+                bool showTooltip = tooltipShowDelay <= pointerDownTimer;
+                if (showTooltip)
+                {
+                    ITooltipTextProvider provider = this.textProvider.GetComponent<ITooltipTextProvider>();
+                    string text = provider.GetTooltipText();
+                    // Debug.Log(name + "pointer down");
+                    Debug.Log(name + "showing tooltip:" + text);
+                    // TooltipsController.ShowTooltip(windowRectTransform, rectTransform, title, text);
+
+                    RectTransform rectTransform = GetComponent<RectTransform>();
+                    TooltipController.ShowTooltip(rectTransform, text);
+                    activatingTooltip = false;
+                }
+            }
         }
     }
 }

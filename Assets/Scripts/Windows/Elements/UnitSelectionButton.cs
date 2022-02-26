@@ -17,12 +17,23 @@ namespace Tactics.Windows.Elements
 
         public UnitState UnitState { get; private set; }
 
-        private void Awake()
+        private float clickTimer;
+        private bool activatingClick;
+        private const float clickMaxDuration = 3f;
+
+        public void HandlePointerDown()
         {
-            button.onClick.AddListener(() =>
+            activatingClick = true;
+            clickTimer = 0;
+        }
+
+        public void HandlePointerUp()
+        {
+            if (activatingClick && clickTimer < clickMaxDuration)
             {
                 OnClicked?.Invoke(this);
-            });
+            }
+            activatingClick = false;
         }
 
         public void Init(UnitState unitState)
@@ -43,5 +54,14 @@ namespace Tactics.Windows.Elements
 
             return $"{UnitState.unitType}\nlevel:{UnitState.unitParams.level}\nattack:{UnitState.unitParams.level}\nexperience:{UnitState.unitParams.level}";
         }
+
+        private void Update()
+        {
+            if (activatingClick)
+            {
+                clickTimer += Time.deltaTime;
+            }
+        }
+
     }
 }

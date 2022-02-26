@@ -14,26 +14,27 @@ namespace Tactics.Windows.Tooltips
         private RectTransform ownerRectTransform;
         private RectTransform containerRectTransform;
 
-        private void Awake()
+        public void Init()
         {
+            canvas = GetComponentInParent<Canvas>();
             rectTransform = GetComponent<RectTransform>();
         }
 
-        public void Show()
+        public void Hide()
         {
-            SetupTooltipPosition(ownerRectTransform, rectTransform);
-            gameObject.SetActive(true);
+            gameObject.SetActive(false);
         }
 
-        public void Initialize(RectTransform ownerRectTransform, RectTransform containerRect, string tooltipText)
+        public void Show(RectTransform ownerRectTransform, RectTransform containerRect, string tooltipText)
         {
-            canvas = GetComponentInParent<Canvas>();
             this.ownerRectTransform = ownerRectTransform;
             this.containerRectTransform = containerRect;
 
             this.tooltipText.text = tooltipText;
-
             UnityEngine.UI.LayoutRebuilder.ForceRebuildLayoutImmediate(rectTransform);
+
+            SetupTooltipPosition(ownerRectTransform, rectTransform);
+            gameObject.SetActive(true);
         }
 
         private void SetupTooltipPosition(RectTransform ownerRectTransform, RectTransform tooltipRectTransform)
