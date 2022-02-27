@@ -31,35 +31,37 @@ namespace Tactics.Windows.Tooltips
 
         public void ShowForSceneObject(Vector3 uiPosition, RectTransform containerRect, string tooltipText)
         {
-            ShowInternal(uiPosition, Vector2.zero, containerRect, tooltipText);
-        }
-
-        public void Show(RectTransform ownerRectTransform, RectTransform containerRect, string tooltipText)
-        {
-            ShowInternal(ownerRectTransform.position, ownerRectTransform.rect.size, containerRect, tooltipText);
-        }
-
-        private void ShowInternal(Vector3 ownerRectPos, Vector2 ownerRectSize, RectTransform containerRect, string tooltipText)
-        {
             this.containerRectTransform = containerRect;
 
             this.tooltipText.text = tooltipText;
             UnityEngine.UI.LayoutRebuilder.ForceRebuildLayoutImmediate(rectTransform);
 
-            SetupTooltipPosition(ownerRectPos, ownerRectPos, rectTransform);
+            Vector3 positionOnCanvas = canvas.transform.InverseTransformPoint(uiPosition);
+            Vector2 tooltipHalfSize = rectTransform.rect.size / 2;
+            Vector2 tooltipPosition = rectTransform.anchoredPosition;
+
+            tooltipPosition.y = positionOnCanvas.y + tooltipHalfSize.y + yOffset;
+            tooltipPosition.x = positionOnCanvas.x;
+
+            rectTransform.anchoredPosition = tooltipPosition;
             gameObject.SetActive(true);
 
             isVisible = true;
             visibleTimer = 2f;
         }
 
-        private void SetupTooltipPosition(Vector3 ownerRectPos, Vector2 ownerRectSize, RectTransform tooltipRectTransform)
+        public void Show(RectTransform ownerRectTransform, RectTransform containerRect, string tooltipText)
         {
+            this.containerRectTransform = containerRect;
+
+            this.tooltipText.text = tooltipText;
+            UnityEngine.UI.LayoutRebuilder.ForceRebuildLayoutImmediate(rectTransform);
+
             Vector2 halfContainerSize = containerRectTransform.rect.size / 2f;
-            Vector3 positionOnCanvas = canvas.transform.InverseTransformPoint(ownerRectPos);
-            Vector2 tooltipHalfSize = tooltipRectTransform.rect.size / 2;
-            Vector2 ownerHalfSize = ownerRectSize / 2f;
-            Vector2 tooltipPosition = tooltipRectTransform.anchoredPosition;
+            Vector3 positionOnCanvas = canvas.transform.InverseTransformPoint(ownerRectTransform.position);
+            Vector2 tooltipHalfSize = rectTransform.rect.size / 2;
+            Vector2 ownerHalfSize = ownerRectTransform.rect.size / 2f;
+            Vector2 tooltipPosition = rectTransform.anchoredPosition;
 
             tooltipPosition.y = positionOnCanvas.y + ownerHalfSize.y + tooltipHalfSize.y + yOffset;
             tooltipPosition.x = positionOnCanvas.x;
@@ -76,7 +78,12 @@ namespace Tactics.Windows.Tooltips
                 tooltipPosition.x += diff * (-Mathf.Sign(tooltipPosition.x));
             }
 
-            tooltipRectTransform.anchoredPosition = tooltipPosition;
+            rectTransform.anchoredPosition = tooltipPosition;
+
+            gameObject.SetActive(true);
+
+            isVisible = true;
+            visibleTimer = 2f;
         }
 
         void Update()

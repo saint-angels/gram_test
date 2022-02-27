@@ -70,9 +70,7 @@ namespace Tactics.Windows
         private void HandleUnitLongTap(UnitShell unit)
         {
             string text = unit.GetTooltipText();
-            // var rect = new RectTransform(10,);
-
-            Vector2 screenPoint = cameraController.WorldToScreenPoint(unit.transform.position + Vector3.up * 0.2f);
+            Vector2 screenPoint = cameraController.WorldToScreenPoint(unit.transform.position);
             Tooltips.TooltipController.ShowTooltipForSceneObject(screenPoint, text);
         }
 
