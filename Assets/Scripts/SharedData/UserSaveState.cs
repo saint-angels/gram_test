@@ -8,12 +8,12 @@ namespace Tactics.SharedData
     [System.Serializable]
     public class UserSaveState
     {
-        public UnitState[] availableUnits;
+        public UnitState[] unlockedUnits;
 
         public static UserSaveState Default(UnitsCollectionConfig unitsCollectionConfig)
         {
             var state = new UserSaveState();
-            state.availableUnits = new UnitState[]
+            state.unlockedUnits = new UnitState[]
             {
                     unitsCollectionConfig.startingStates[0],
                     unitsCollectionConfig.startingStates[1],
@@ -24,7 +24,7 @@ namespace Tactics.SharedData
 
         public UnitState GetUnitForType(UnitType unitType)
         {
-            foreach (var unitState in availableUnits)
+            foreach (var unitState in unlockedUnits)
             {
                 if (unitState.unitType == unitType)
                 {
