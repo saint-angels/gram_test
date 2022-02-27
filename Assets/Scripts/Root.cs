@@ -56,8 +56,8 @@ namespace Tactics
                     {
                         unitState.unitParams.experience -= 5;
                         unitState.unitParams.level += 1;
-                        unitState.unitParams.attack += Mathf.FloorToInt(unitState.unitParams.attack * 0.1f);
-                        unitState.unitParams.maxHealth += Mathf.FloorToInt(unitState.unitParams.maxHealth * 0.1f);
+                        unitState.unitParams.attack += Mathf.CeilToInt(unitState.unitParams.attack * 0.1f);
+                        unitState.unitParams.maxHealth += Mathf.CeilToInt(unitState.unitParams.maxHealth * 0.1f);
                     }
                 }
                 cacheManager.Save<UserSaveState>(saveState, allowOverwrite: true);
