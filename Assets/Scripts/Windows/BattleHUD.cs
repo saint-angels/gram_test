@@ -1,15 +1,19 @@
 using System.Collections;
 using System.Collections.Generic;
+using DG.Tweening;
 using Tactics.Battle;
 using Tactics.Helpers.ObjectPool;
+using Tactics.SharedData;
 using Tactics.Windows.Elements;
 using UnityEngine;
+using UnityEngine.UI;
 
 namespace Tactics.Windows
 {
     public class BattleHUD : MonoBehaviour
     {
         [SerializeField] private Healthbar healthbarPrefab = null;
+        [SerializeField] private Text paramIncreaseLabelPrefab = null;
         [SerializeField] private RectTransform healthbarContainerRect = null;
 
         public float multiplier;
@@ -18,15 +22,64 @@ namespace Tactics.Windows
         private CameraController cameraController;
         private BattleManager battleManager;
         private InputController inputController;
+        private ProfileManager profileManager;
 
-        public void Init(Battle.BattleManager battleManager, CameraController cameraController, InputController inputController)
+        public void Init(Battle.BattleManager battleManager, CameraController cameraController, InputController inputController, ProfileManager profileManager)
         {
             this.cameraController = cameraController;
             this.battleManager = battleManager;
             this.inputController = inputController;
+            this.profileManager = profileManager;
+
             battleManager.OnBattleInit += HandleBattleInit;
             inputController.OnUnitLongTap += HandleUnitLongTap;
+            profileManager.OnUnitsParamUpgrade += HandleUnitsParamUpgrade;
             unitsHealth = new Dictionary<UnitShell, Healthbar>();
+        }
+
+        private void HandleUnitsParamUpgrade(List<UnitState> unitStateDelta)
+        {
+            foreach (var stateDelta in unitStateDelta)
+            {
+                foreach (KeyValuePair<UnitShell, Healthbar> kvp in unitsHealth)
+                {
+                    UnitShell unit = kvp.Key;
+                    if (unit.UnitType == stateDelta.unitType)
+                    {
+                        Vector2? localPoint = GetLocalUIPointForWorld(unit.transform.position, 1f);
+                        if (localPoint.HasValue)
+                        {
+                            Sequence sequence = DOTween.Sequence();
+                            TryHandleParamDelta(stateDelta.unitParams.attack, "attack", localPoint.Value, sequence);
+                            TryHandleParamDelta(stateDelta.unitParams.maxHealth, "HP", localPoint.Value, sequence);
+                            TryHandleParamDelta(stateDelta.unitParams.experience, "experience", localPoint.Value, sequence);
+                            TryHandleParamDelta(stateDelta.unitParams.level, "level", localPoint.Value, sequence);
+                        }
+                    }
+                }
+            }
+
+            void TryHandleParamDelta(int paramDelta, string paramName, Vector2 uiLocalPoint, Sequence seq)
+            {
+                if (0 < paramDelta)
+                {
+                    // print($"{paramName} +{paramDelta}!");
+                    Text paramIncreaseLabel = ObjectPool.Spawn(paramIncreaseLabelPrefab, uiLocalPoint, Quaternion.identity, transform, true);
+                    //hide the label and show only when it starts moving
+                    paramIncreaseLabel.gameObject.SetActive(false);
+                    seq.AppendCallback(() =>
+                    {
+                        paramIncreaseLabel.gameObject.SetActive(true);
+                    });
+                    paramIncreaseLabel.text = $"{paramName} +{paramDelta}!";
+                    var tween = paramIncreaseLabel.rectTransform.DOLocalMoveY(uiLocalPoint.y + 10f, 1f);
+                    tween.OnComplete(() =>
+                    {
+                        ObjectPool.Despawn(paramIncreaseLabel, true);
+                    });
+                    seq.Append(tween);
+                }
+            }
         }
 
         public void Clear()
@@ -50,6 +103,10 @@ namespace Tactics.Windows
             {
                 inputController.OnUnitLongTap -= HandleUnitLongTap;
             }
+            if (profileManager != null)
+            {
+                profileManager.OnUnitsParamUpgrade -= HandleUnitsParamUpgrade;
+            }
         }
 
         void LateUpdate()
@@ -58,12 +115,25 @@ namespace Tactics.Windows
             {
                 var unit = kvp.Key;
                 Healthbar healthbar = kvp.Value;
-                Vector2 screenPoint = cameraController.WorldToScreenPoint(unit.transform.position + Vector3.up * 0.6f);
-                Vector2 localPoint;
-                if (RectTransformUtility.ScreenPointToLocalPointInRectangle(healthbarContainerRect, screenPoint, null, out localPoint))
+                Vector2? localPoint = GetLocalUIPointForWorld(unit.transform.position, 0.6f);
+                if (localPoint.HasValue)
                 {
-                    healthbar.transform.localPosition = localPoint;
+                    healthbar.transform.localPosition = localPoint.Value;
                 }
+            }
+        }
+
+        private Vector2? GetLocalUIPointForWorld(Vector3 position, float offset)
+        {
+            Vector2 screenPoint = cameraController.WorldToScreenPoint(position + Vector3.up * offset);
+            Vector2 localPoint;
+            if (RectTransformUtility.ScreenPointToLocalPointInRectangle(healthbarContainerRect, screenPoint, null, out localPoint))
+            {
+                return localPoint;
+            }
+            else
+            {
+                return null;
             }
         }
 

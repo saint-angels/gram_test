@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using Tactics.Battle;
@@ -9,6 +10,8 @@ namespace Tactics
 {
     public class ProfileManager : MonoBehaviour
     {
+        public event Action<List<UnitState>> OnUnitsParamUpgrade;
+
         [SerializeField] private UnitsCollectionConfig unitsCollectionConfig = null;
 
         private LocalCacheManager cacheManager = null;
@@ -21,19 +24,26 @@ namespace Tactics
             battleManager.OnUserUnitsSurvived += (survivedUserUnits) =>
             {
                 UserSaveState saveState = GetUserSaveState();
+                var unitParamsDelta = new List<UnitState>();
                 foreach (UnitType unitType in survivedUserUnits)
                 {
-                    UnitState unitState = saveState.GetUnitForType(unitType);
-                    unitState.unitParams.experience++;
+                    UnitState prevUnitState = saveState.GetUnitForType(unitType);
+                    UnitState newUnitState = prevUnitState.Clone();
+                    newUnitState.unitParams.experience++;
                     //Level up the unit as much as possible
-                    while (5 <= unitState.unitParams.experience)
+                    while (5 <= newUnitState.unitParams.experience)
                     {
-                        unitState.unitParams.experience -= 5;
-                        unitState.unitParams.level += 1;
-                        unitState.unitParams.attack += Mathf.CeilToInt(unitState.unitParams.attack * 0.1f);
-                        unitState.unitParams.maxHealth += Mathf.CeilToInt(unitState.unitParams.maxHealth * 0.1f);
+                        newUnitState.unitParams.experience -= 5;
+                        newUnitState.unitParams.level += 1;
+                        newUnitState.unitParams.attack += Mathf.CeilToInt(newUnitState.unitParams.attack * 0.1f);
+                        newUnitState.unitParams.maxHealth += Mathf.CeilToInt(newUnitState.unitParams.maxHealth * 0.1f);
                     }
+
+                    saveState.UpdateUnitState(newUnitState);
+                    UnitState unitUpgradeDelta = newUnitState.GetDelta(prevUnitState);
+                    unitParamsDelta.Add(unitUpgradeDelta);
                 }
+                OnUnitsParamUpgrade?.Invoke(unitParamsDelta);
                 cacheManager.Save<UserSaveState>(saveState, allowOverwrite: true);
             };
 

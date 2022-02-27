@@ -31,8 +31,22 @@ namespace Tactics.SharedData
                     return unitState;
                 }
             }
-            Debug.LogError($"Can't find starting unit state for type {unitType}");
+            Debug.LogError($"Can't find unit state for type {unitType}");
             return new UnitState();
+        }
+
+
+        public void UpdateUnitState(UnitState newUnitState)
+        {
+            for (int i = 0; i < unlockedUnits.Length; i++)
+            {
+                if (unlockedUnits[i].unitType == newUnitState.unitType)
+                {
+                    unlockedUnits[i] = newUnitState;
+                    return;
+                }
+            }
+            Debug.LogError($"Can't find unit state for type {newUnitState.unitType}");
         }
     }
 }

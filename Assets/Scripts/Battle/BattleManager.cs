@@ -120,18 +120,28 @@ namespace Tactics.Battle
                     {
                         UnitShell unit = unitsUser[i];
                         survivedUnitTypes[i] = unit.UnitType;
-
-                        unit.Die();
                     }
-                    for (int i = unitsAI.Count - 1; i >= 0; i--)
-                    {
-                        UnitShell unit = unitsAI[i];
-                        unit.Die();
-                    }
-
                     OnUserUnitsSurvived?.Invoke(survivedUnitTypes);
+
+                    return;
+
                 }
             }
         }
+
+        private void Clean()
+        {
+            for (int i = unitsUser.Count - 1; i >= 0; i--)
+            {
+                UnitShell unit = unitsUser[i];
+                unit.Die();
+            }
+            for (int i = unitsAI.Count - 1; i >= 0; i--)
+            {
+                UnitShell unit = unitsAI[i];
+                unit.Die();
+            }
+        }
+
     }
 }
