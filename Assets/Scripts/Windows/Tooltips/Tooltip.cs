@@ -50,7 +50,7 @@ namespace Tactics.Windows.Tooltips
             visibleTimer = 2f;
         }
 
-        public void Show(RectTransform ownerRectTransform, RectTransform containerRect, string tooltipText)
+        public void ShowForUIElement(RectTransform ownerRectTransform, RectTransform containerRect, string tooltipText)
         {
             this.containerRectTransform = containerRect;
 

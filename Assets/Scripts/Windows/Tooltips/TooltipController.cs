@@ -33,7 +33,7 @@ namespace Tactics.Windows.Tooltips
         private void ShowTooltipInternal(RectTransform targetRect, string text)
         {
             // RectTransformUtil.SnapToParent(tooltipsContainerRect, windowRect);
-            tooltip.Show(targetRect, tooltipsContainerRect, text);
+            tooltip.ShowForUIElement(targetRect, tooltipsContainerRect, text);
             // transform.SetAsLastSibling();
         }
 
