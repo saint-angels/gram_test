@@ -41,9 +41,6 @@ namespace Tactics.Windows.Tooltips
                 {
                     ITooltipTextProvider provider = this.textProvider.GetComponent<ITooltipTextProvider>();
                     string text = provider.GetTooltipText();
-                    // Debug.Log(name + "showing tooltip:" + text);
-                    // TooltipsController.ShowTooltip(windowRectTransform, rectTransform, title, text);
-
                     RectTransform rectTransform = GetComponent<RectTransform>();
                     TooltipController.ShowTooltip(rectTransform, text);
                     activatingTooltip = false;

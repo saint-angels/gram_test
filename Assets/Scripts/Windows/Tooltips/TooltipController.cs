@@ -25,6 +25,11 @@ namespace Tactics.Windows.Tooltips
             instance.ShowTooltipInternal(targetRect, text);
         }
 
+        public static void ShowTooltipForSceneObject(Vector3 positionOnCanvas, string text)
+        {
+            instance.tooltip.ShowForSceneObject(positionOnCanvas, instance.tooltipsContainerRect, text);
+        }
+
         private void ShowTooltipInternal(RectTransform targetRect, string text)
         {
             // RectTransformUtil.SnapToParent(tooltipsContainerRect, windowRect);

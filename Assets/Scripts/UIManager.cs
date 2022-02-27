@@ -11,12 +11,12 @@ namespace Tactics
         [SerializeField] private UnitSelectionWindow unitSelectionWindow = null;
         [SerializeField] private BattleHUD battleHUD = null;
 
-        public void ShowHUD(Battle.BattleManager battleManager, CameraController cameraController)
+        public void ShowHUD(Battle.BattleManager battleManager, CameraController cameraController, InputController inputController)
         {
             unitSelectionWindow.Clear();
             unitSelectionWindow.gameObject.SetActive(false);
 
-            battleHUD.Init(battleManager, cameraController);
+            battleHUD.Init(battleManager, cameraController, inputController);
             battleHUD.gameObject.SetActive(true);
         }
 

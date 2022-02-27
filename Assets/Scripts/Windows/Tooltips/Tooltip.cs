@@ -11,7 +11,6 @@ namespace Tactics.Windows.Tooltips
 
         private Canvas canvas;
         private RectTransform rectTransform;
-        private RectTransform ownerRectTransform;
         private RectTransform containerRectTransform;
 
         private float visibleTimer;
@@ -30,27 +29,36 @@ namespace Tactics.Windows.Tooltips
             isVisible = false;
         }
 
+        public void ShowForSceneObject(Vector3 uiPosition, RectTransform containerRect, string tooltipText)
+        {
+            ShowInternal(uiPosition, Vector2.zero, containerRect, tooltipText);
+        }
+
         public void Show(RectTransform ownerRectTransform, RectTransform containerRect, string tooltipText)
         {
-            this.ownerRectTransform = ownerRectTransform;
+            ShowInternal(ownerRectTransform.position, ownerRectTransform.rect.size, containerRect, tooltipText);
+        }
+
+        private void ShowInternal(Vector3 ownerRectPos, Vector2 ownerRectSize, RectTransform containerRect, string tooltipText)
+        {
             this.containerRectTransform = containerRect;
 
             this.tooltipText.text = tooltipText;
             UnityEngine.UI.LayoutRebuilder.ForceRebuildLayoutImmediate(rectTransform);
 
-            SetupTooltipPosition(ownerRectTransform, rectTransform);
+            SetupTooltipPosition(ownerRectPos, ownerRectPos, rectTransform);
             gameObject.SetActive(true);
 
             isVisible = true;
             visibleTimer = 2f;
         }
 
-        private void SetupTooltipPosition(RectTransform ownerRectTransform, RectTransform tooltipRectTransform)
+        private void SetupTooltipPosition(Vector3 ownerRectPos, Vector2 ownerRectSize, RectTransform tooltipRectTransform)
         {
             Vector2 halfContainerSize = containerRectTransform.rect.size / 2f;
-            Vector3 positionOnCanvas = canvas.transform.InverseTransformPoint(ownerRectTransform.position);
+            Vector3 positionOnCanvas = canvas.transform.InverseTransformPoint(ownerRectPos);
             Vector2 tooltipHalfSize = tooltipRectTransform.rect.size / 2;
-            Vector2 ownerHalfSize = ownerRectTransform.rect.size / 2f;
+            Vector2 ownerHalfSize = ownerRectSize / 2f;
             Vector2 tooltipPosition = tooltipRectTransform.anchoredPosition;
 
             tooltipPosition.y = positionOnCanvas.y + ownerHalfSize.y + tooltipHalfSize.y + yOffset;

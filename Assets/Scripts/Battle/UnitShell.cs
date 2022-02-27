@@ -2,12 +2,13 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using Tactics.Helpers.StatefulEvent;
+using Tactics.Interfaces;
 using Tactics.SharedData;
 using UnityEngine;
 
 namespace Tactics.Battle
 {
-    public class UnitShell : MonoBehaviour
+    public class UnitShell : MonoBehaviour, ITooltipTextProvider
     {
         public IStatefulEvent<int> HealthState => healthState;
 
@@ -47,6 +48,15 @@ namespace Tactics.Battle
         public void Die()
         {
             OnDeath?.Invoke(this);
+        }
+
+        public string GetTooltipText()
+        {
+            string levelLabel = $"level: {Params.level}";
+            string experienceLabel = $"experience: {Params.experience}";
+            string attackLabel = $"attack: {Params.attack}";
+            string maxHealthLabel = $"health: {Params.maxHealth}";
+            return $"{UnitType}\n{levelLabel}\n{experienceLabel}\n{attackLabel}\n{maxHealthLabel}";
         }
     }
 }

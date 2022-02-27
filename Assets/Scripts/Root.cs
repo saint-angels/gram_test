@@ -79,7 +79,7 @@ namespace Tactics
 
             void GoBattle(UnitState[] selectedUnits)
             {
-                uiManager.ShowHUD(battleManager, CameraController);
+                uiManager.ShowHUD(battleManager, CameraController, inputController);
                 var enemyStates = new UnitState[] { enemiesConfig.enemyStates[0] };
                 battleManager.StartBattle(selectedUnits, enemyStates);
             }

@@ -17,12 +17,15 @@ namespace Tactics.Windows
         private Dictionary<UnitShell, Healthbar> unitsHealth;
         private CameraController cameraController;
         private BattleManager battleManager;
+        private InputController inputController;
 
-        public void Init(Battle.BattleManager battleManager, CameraController cameraController)
+        public void Init(Battle.BattleManager battleManager, CameraController cameraController, InputController inputController)
         {
             this.cameraController = cameraController;
             this.battleManager = battleManager;
+            this.inputController = inputController;
             battleManager.OnBattleInit += HandleBattleInit;
+            inputController.OnUnitLongTap += HandleUnitLongTap;
             unitsHealth = new Dictionary<UnitShell, Healthbar>();
         }
 
@@ -42,6 +45,11 @@ namespace Tactics.Windows
             {
                 battleManager.OnBattleInit -= HandleBattleInit;
             }
+
+            if (inputController != null)
+            {
+                inputController.OnUnitLongTap -= HandleUnitLongTap;
+            }
         }
 
         void LateUpdate()
@@ -57,6 +65,15 @@ namespace Tactics.Windows
                     healthbar.transform.localPosition = localPoint;
                 }
             }
+        }
+
+        private void HandleUnitLongTap(UnitShell unit)
+        {
+            string text = unit.GetTooltipText();
+            // var rect = new RectTransform(10,);
+
+            Vector2 screenPoint = cameraController.WorldToScreenPoint(unit.transform.position + Vector3.up * 0.2f);
+            Tooltips.TooltipController.ShowTooltipForSceneObject(screenPoint, text);
         }
 
         private void HandleBattleInit(List<UnitShell> userUnits, List<UnitShell> enemyUnits)
