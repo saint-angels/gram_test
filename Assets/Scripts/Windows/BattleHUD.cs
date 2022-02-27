@@ -55,6 +55,7 @@ namespace Tactics.Windows
                             TryHandleParamDelta(stateDelta.unitParams.experience, "experience", localPoint.Value, sequence);
                             TryHandleParamDelta(stateDelta.unitParams.level, "level", localPoint.Value, sequence);
                         }
+                        break;
                     }
                 }
             }
