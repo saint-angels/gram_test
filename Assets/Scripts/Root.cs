@@ -3,7 +3,6 @@ using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using Tactics.SharedData;
-using Tactics.Windows;
 using Tactics.Configs;
 using Tactics.Helpers.StatefulEvent;
 

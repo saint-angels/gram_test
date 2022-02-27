@@ -12,7 +12,7 @@ namespace Tactics.Windows.Tooltips
 
         private float pointerDownTimer;
         private bool activatingTooltip;
-        private const float tooltipShowDelay = 3f;
+        private const float tooltipShowDelay = .5f;
 
         private void Awake()
         {

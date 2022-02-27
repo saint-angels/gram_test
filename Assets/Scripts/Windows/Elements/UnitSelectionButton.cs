@@ -18,7 +18,7 @@ namespace Tactics.Windows.Elements
 
         private float clickTimer;
         private bool activatingClick;
-        private const float clickMaxDuration = 3f;
+        private const float clickMaxDuration = .5f;
 
         public void HandlePointerDown()
         {
@@ -50,8 +50,11 @@ namespace Tactics.Windows.Elements
 
         public string GetTooltipText()
         {
-
-            return $"{UnitState.unitType}\nlevel:{UnitState.unitParams.level}\nattack:{UnitState.unitParams.level}\nexperience:{UnitState.unitParams.level}";
+            string levelLabel = $"level: {UnitState.unitParams.level}";
+            string experienceLabel = $"experience: {UnitState.unitParams.experience}";
+            string attackLabel = $"attack: {UnitState.unitParams.attack}";
+            string maxHealthLabel = $"health: {UnitState.unitParams.maxHealth}";
+            return $"{UnitState.unitType}\n{levelLabel}\n{experienceLabel}\n{attackLabel}\n{maxHealthLabel}";
         }
 
         private void Update()
