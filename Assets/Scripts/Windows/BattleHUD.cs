@@ -16,6 +16,7 @@ namespace Tactics.Windows
     {
         [SerializeField] private Healthbar healthbarPrefab = null;
         [SerializeField] private Text paramIncreaseLabelPrefab = null;
+        [SerializeField] private Text damageDealtLabelPrefab = null;
         [SerializeField] private RectTransform healthbarContainerRect = null;
         [SerializeField] private GameObject battleResultPanel = null;
         [SerializeField] private Text battleResultLabel = null;
@@ -85,7 +86,6 @@ namespace Tactics.Windows
             {
                 if (0 < paramDelta)
                 {
-                    // print($"{paramName} +{paramDelta}!");
                     Text paramIncreaseLabel = ObjectPool.Spawn(paramIncreaseLabelPrefab, uiLocalPoint, Quaternion.identity, transform, true);
                     //hide the label and show only when it starts moving
                     paramIncreaseLabel.gameObject.SetActive(false);
@@ -185,6 +185,21 @@ namespace Tactics.Windows
                     unit.HealthState.OnValueChanged += (healthValue) =>
                     {
                         unitsHealth[unit].SetValue(healthValue, unit.Params.maxHealth);
+
+                    };
+                    unit.OnDamaged += (damageValue) =>
+                    {
+                        Vector2? localPoint = GetLocalUIPointForWorld(unit.transform.position, 1f);
+                        if (localPoint.HasValue)
+                        {
+                            Text damageLabel = ObjectPool.Spawn(damageDealtLabelPrefab, localPoint.Value, Quaternion.identity, transform, true);
+                            damageLabel.text = $"-{damageValue}";
+                            var tween = damageLabel.rectTransform.DOLocalMoveY(localPoint.Value.y + 10f, .3f);
+                            tween.OnComplete(() =>
+                            {
+                                ObjectPool.Despawn(damageLabel, true);
+                            });
+                        }
                     };
                     unit.OnDeath += (deadUnit) =>
                     {

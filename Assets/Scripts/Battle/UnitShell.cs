@@ -12,6 +12,7 @@ namespace Tactics.Battle
     public class UnitShell : MonoBehaviour, ITooltipTextProvider
     {
         public event Action<UnitType> OnInit;
+        public event Action<int> OnDamaged;
 
         public IStatefulEvent<int> HealthState => healthState;
 
@@ -44,6 +45,7 @@ namespace Tactics.Battle
             int newHealth = healthState.Value - damage;
             newHealth = Mathf.Clamp(newHealth, 0, Params.maxHealth);
             healthState.Set(newHealth);
+            OnDamaged?.Invoke(damage);
             if (newHealth == 0)
             {
                 Die();
