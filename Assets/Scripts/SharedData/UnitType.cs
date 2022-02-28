@@ -10,5 +10,6 @@ namespace Tactics.SharedData
         Tank,
         DamageDealer,
         Bard,
+        Mage,
     }
 }

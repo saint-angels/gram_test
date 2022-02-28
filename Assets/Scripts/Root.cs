@@ -17,10 +17,10 @@ namespace Tactics
         [SerializeField] private CameraController cameraController = null;
         [SerializeField] private InputController inputController = null;
 
-        [SerializeField] private EnemyUnitsConfig enemiesConfig = null;
         [SerializeField] private UIManager uiManager = null;
         [SerializeField] private LocalCacheManager cacheManager = null;
         [SerializeField] private ProfileManager profileManager = null;
+        [SerializeField] private ConfigManager configManager = null;
 
         private static Root _instance;
 
@@ -31,7 +31,7 @@ namespace Tactics
 
         void Start()
         {
-            profileManager.Init(battleManager, cacheManager);
+            profileManager.Init(battleManager, cacheManager, configManager);
             levelView.Init(battleManager);
             battleManager.Init(inputController);
             battleManager.OnBattleFinished += () => GoMeta();
@@ -50,9 +50,7 @@ namespace Tactics
             void GoBattle(UnitState[] selectedUnits)
             {
                 IPromise battleUIProcessingPromise = uiManager.ShowHUD(battleManager, CameraController, inputController, profileManager);
-                //TODO: Make enemy rotation
-                var enemyStates = new UnitState[] { enemiesConfig.enemyStates[0] };
-                battleManager.StartBattle(selectedUnits, enemyStates, battleUIProcessingPromise);
+                battleManager.StartBattle(selectedUnits, configManager, battleUIProcessingPromise);
             }
         }
     }

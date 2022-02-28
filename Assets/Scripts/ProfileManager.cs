@@ -12,14 +12,13 @@ namespace Tactics
     {
         public event Action<List<UnitState>> OnUnitsParamUpgrade;
 
-        [SerializeField] private UnitsCollectionConfig unitsCollectionConfig = null;
+        private LocalCacheManager cacheManager;
+        private ConfigManager configManager;
 
-        private LocalCacheManager cacheManager = null;
-
-        public void Init(BattleManager battleManager, LocalCacheManager cacheManager)
+        public void Init(BattleManager battleManager, LocalCacheManager cacheManager, ConfigManager configManager)
         {
             this.cacheManager = cacheManager;
-
+            this.configManager = configManager;
 
             battleManager.OnUserUnitsSurvived += (survivedUserUnits) =>
             {
@@ -63,7 +62,7 @@ namespace Tactics
             }
             else
             {
-                saveState = UserSaveState.Default(unitsCollectionConfig);
+                saveState = UserSaveState.Default(configManager.UnitsCollection);
             }
             return saveState;
         }

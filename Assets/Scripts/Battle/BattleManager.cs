@@ -30,8 +30,11 @@ namespace Tactics.Battle
             };
         }
 
-        public void StartBattle(UnitState[] userUnitStates, UnitState[] aiUnitStates, IPromise hudBattleProcessDeferred)
+        public void StartBattle(UnitState[] userUnitStates, ConfigManager configManager, IPromise hudBattleProcessDeferred)
         {
+            //TODO: Make enemy rotation
+            var aiUnitStates = new UnitState[] { configManager.EnemyUnits.enemyStates[0] };
+
             unitsUser = new List<UnitShell>();
             unitsAI = new List<UnitShell>();
             InitUnitsForFaction(Faction.User, userUnitStates);
