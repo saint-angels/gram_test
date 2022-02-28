@@ -11,5 +11,11 @@ namespace Tactics.SharedData
         DamageDealer,
         Bard,
         Mage,
+        Druid,
+        Berserk,
+        Archer,
+        Healer,
+        Ork,
+        Human
     }
 }

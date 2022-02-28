@@ -9,8 +9,10 @@ namespace Tactics
     {
         public EnemyUnitsConfig EnemyUnits => enemyUnitsConfig;
         public UnitsCollectionConfig UnitsCollection => unitsCollectionConfig;
+        public UnitSpritesConfig UnitSprites => unitSpritesConfig;
 
         [SerializeField] private EnemyUnitsConfig enemyUnitsConfig = null;
         [SerializeField] private UnitsCollectionConfig unitsCollectionConfig = null;
+        [SerializeField] private UnitSpritesConfig unitSpritesConfig = null;
     }
 }
