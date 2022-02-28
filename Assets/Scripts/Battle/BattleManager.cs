@@ -67,7 +67,8 @@ namespace Tactics.Battle
                         }
                         else
                         {
-                            opposingUnits[0].Damage(damage);
+                            int randomOpponentIndex = UnityEngine.Random.Range(0, opposingUnits.Count);
+                            opposingUnits[randomOpponentIndex].Damage(damage);
                         }
 
                         if (opposingUnits.Count == 0)
@@ -76,6 +77,7 @@ namespace Tactics.Battle
                         }
                         else if (attacker.Faction == Faction.User)
                         {
+                            //Assume we always have only 1 AI unit
                             unitsAI[0].Attack();
                         }
                     };
