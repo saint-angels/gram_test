@@ -31,7 +31,7 @@ namespace Tactics.Windows
                     UnitSelectionButton button = selectedButtons[i];
                     selectedUnits[i] = button.UnitState;
                 }
-                OnUnitsSelected(selectedUnits);
+                OnUnitsSelected?.Invoke(selectedUnits);
             });
         }
 
@@ -77,6 +77,7 @@ namespace Tactics.Windows
             {
                 ObjectPool.Despawn(button, true);
             }
+            unitButtons.Clear();
             selectedButtons.Clear();
 
             OnUnitsSelected = null;
