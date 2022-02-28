@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Tactics.Helpers.Promises;
 using Tactics.Helpers.StatefulEvent;
 using Tactics.Interfaces;
 using Tactics.SharedData;
@@ -14,7 +15,7 @@ namespace Tactics.Battle
 
         public IStatefulEvent<int> HealthState => healthState;
 
-        public event Action<UnitShell, int> OnAttack;
+        public event Action<UnitShell, int, Deferred> OnAttack;
         public event Action<UnitShell> OnDeath;
 
         private readonly StatefulEventInt<int> healthState = StatefulEventInt.Create(0);
@@ -35,7 +36,7 @@ namespace Tactics.Battle
 
         public void Attack()
         {
-            OnAttack?.Invoke(this, Params.attack);
+            OnAttack?.Invoke(this, Params.attack, Deferred.GetFromPool());
         }
 
         public void Damage(int damage)

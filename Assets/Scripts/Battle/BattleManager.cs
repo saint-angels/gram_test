@@ -56,34 +56,37 @@ namespace Tactics.Battle
                 {
 
                     UnitShell unit = GameObject.Instantiate(unitPrefab, Vector3.zero, Quaternion.identity, unitContainer);
-                    unit.OnAttack += (attacker, damage) =>
+                    unit.OnAttack += (attacker, damage, attackAnimationPromise) =>
                     {
-                        var opposingUnits = faction switch
+                        attackAnimationPromise.Done(() =>
                         {
-                            Faction.User => unitsAI,
-                            Faction.AI => unitsUser,
-                            _ => throw new Exception($"Unexpected faction {faction}!"),
-                        };
+                            var opposingUnits = faction switch
+                            {
+                                Faction.User => unitsAI,
+                                Faction.AI => unitsUser,
+                                _ => throw new Exception($"Unexpected faction {faction}!"),
+                            };
 
-                        if (opposingUnits.Count == 0)
-                        {
-                            Debug.LogError($"{unit.Faction} has no units to attack!");
-                        }
-                        else
-                        {
-                            int randomOpponentIndex = UnityEngine.Random.Range(0, opposingUnits.Count);
-                            opposingUnits[randomOpponentIndex].Damage(damage);
-                        }
+                            if (opposingUnits.Count == 0)
+                            {
+                                Debug.LogError($"{unit.Faction} has no units to attack!");
+                            }
+                            else
+                            {
+                                int randomOpponentIndex = UnityEngine.Random.Range(0, opposingUnits.Count);
+                                opposingUnits[randomOpponentIndex].Damage(damage);
+                            }
 
-                        if (opposingUnits.Count == 0)
-                        {
-                            HandleBattleOver(unit.Faction);
-                        }
-                        else if (attacker.Faction == Faction.User)
-                        {
-                            //Assume we always have only 1 AI unit
-                            unitsAI[0].Attack();
-                        }
+                            if (opposingUnits.Count == 0)
+                            {
+                                HandleBattleOver(unit.Faction);
+                            }
+                            else if (attacker.Faction == Faction.User)
+                            {
+                                //Assume we always have only 1 AI unit
+                                unitsAI[0].Attack();
+                            }
+                        });
                     };
                     unit.OnDeath += (deadUnit) =>
                     {
