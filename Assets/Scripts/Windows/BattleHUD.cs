@@ -184,7 +184,7 @@ namespace Tactics.Windows
                 for (int i = 0; i < units.Count; i++)
                 {
                     UnitShell unit = units[i];
-                    Healthbar healthBar = ObjectPool.Spawn(healthbarPrefab, Vector3.zero, Quaternion.identity, transform, true);
+                    Healthbar healthBar = ObjectPool.Spawn(healthbarPrefab, Vector3.zero, Quaternion.identity, healthbarContainerRect, true);
                     healthBar.SetValue(unit.HealthState.Value, unit.Params.maxHealth);
                     unitsHealth.Add(unit, healthBar);
 

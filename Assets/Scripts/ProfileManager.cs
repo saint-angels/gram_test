@@ -2,7 +2,6 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using Tactics.Battle;
-using Tactics.Configs;
 using Tactics.SharedData;
 using UnityEngine;
 
