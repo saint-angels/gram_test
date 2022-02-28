@@ -19,13 +19,14 @@ namespace Tactics.Battle
         private List<UnitShell> unitsUser;
         private List<UnitShell> unitsAI;
 
-        private Deferred hudBattleProcessDeferred;
+        private IPromise unitAttackAnimPromise;
 
         public void Init(InputController input)
         {
             input.OnUnitClick += (unit) =>
             {
-                if (unit.Faction == Faction.User)
+                bool waitingForInput = unitAttackAnimPromise == null;
+                if (waitingForInput && unit.Faction == Faction.User)
                 {
                     unit.Attack();
                 }
@@ -58,8 +59,10 @@ namespace Tactics.Battle
                     UnitShell unit = GameObject.Instantiate(unitPrefab, Vector3.zero, Quaternion.identity, unitContainer);
                     unit.OnAttack += (attacker, damage, attackAnimationPromise) =>
                     {
+                        unitAttackAnimPromise = attackAnimationPromise;
                         attackAnimationPromise.Done(() =>
                         {
+                            unitAttackAnimPromise = null;
                             var opposingUnits = faction switch
                             {
                                 Faction.User => unitsAI,
