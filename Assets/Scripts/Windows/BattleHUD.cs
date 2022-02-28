@@ -1,8 +1,10 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using DG.Tweening;
 using Tactics.Battle;
 using Tactics.Helpers.ObjectPool;
+using Tactics.Helpers.Promises;
 using Tactics.SharedData;
 using Tactics.Windows.Elements;
 using UnityEngine;
@@ -24,7 +26,9 @@ namespace Tactics.Windows
         private InputController inputController;
         private ProfileManager profileManager;
 
-        public void Init(Battle.BattleManager battleManager, CameraController cameraController, InputController inputController, ProfileManager profileManager)
+        private Deferred battleProcessDeferred;
+
+        public IPromise Init(Battle.BattleManager battleManager, CameraController cameraController, InputController inputController, ProfileManager profileManager)
         {
             this.cameraController = cameraController;
             this.battleManager = battleManager;
@@ -35,10 +39,14 @@ namespace Tactics.Windows
             inputController.OnUnitLongTap += HandleUnitLongTap;
             profileManager.OnUnitsParamUpgrade += HandleUnitsParamUpgrade;
             unitsHealth = new Dictionary<UnitShell, Healthbar>();
+            battleProcessDeferred = Deferred.GetFromPool();
+
+            return battleProcessDeferred;
         }
 
         private void HandleUnitsParamUpgrade(List<UnitState> unitStateDelta)
         {
+            Sequence mainSeq = DOTween.Sequence();
             foreach (var stateDelta in unitStateDelta)
             {
                 foreach (KeyValuePair<UnitShell, Healthbar> kvp in unitsHealth)
@@ -49,16 +57,19 @@ namespace Tactics.Windows
                         Vector2? localPoint = GetLocalUIPointForWorld(unit.transform.position, 1f);
                         if (localPoint.HasValue)
                         {
-                            Sequence sequence = DOTween.Sequence();
-                            TryHandleParamDelta(stateDelta.unitParams.attack, "attack", localPoint.Value, sequence);
-                            TryHandleParamDelta(stateDelta.unitParams.maxHealth, "HP", localPoint.Value, sequence);
-                            TryHandleParamDelta(stateDelta.unitParams.experience, "experience", localPoint.Value, sequence);
-                            TryHandleParamDelta(stateDelta.unitParams.level, "level", localPoint.Value, sequence);
+                            Sequence unitSequence = DOTween.Sequence();
+                            TryHandleParamDelta(stateDelta.unitParams.attack, "attack", localPoint.Value, unitSequence);
+                            TryHandleParamDelta(stateDelta.unitParams.maxHealth, "HP", localPoint.Value, unitSequence);
+                            TryHandleParamDelta(stateDelta.unitParams.experience, "experience", localPoint.Value, unitSequence);
+                            TryHandleParamDelta(stateDelta.unitParams.level, "level", localPoint.Value, unitSequence);
+                            //Make all unit sequences run in parallel
+                            mainSeq.Insert(0, unitSequence);
                         }
                         break;
                     }
                 }
             }
+            mainSeq.OnComplete(() => battleProcessDeferred.Resolve());
 
             void TryHandleParamDelta(int paramDelta, string paramName, Vector2 uiLocalPoint, Sequence seq)
             {

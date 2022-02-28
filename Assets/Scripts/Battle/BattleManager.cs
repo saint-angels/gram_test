@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Tactics.Helpers.Promises;
 using Tactics.SharedData;
 using UnityEngine;
 
@@ -10,10 +11,13 @@ namespace Tactics.Battle
     {
         public event Action<UnitType[]> OnUserUnitsSurvived;
         public event Action<List<UnitShell>, List<UnitShell>> OnBattleInit;
+        public event Action OnBattleFinished;
         [SerializeField] private Transform unitContainer;
 
         private List<UnitShell> unitsUser;
         private List<UnitShell> unitsAI;
+
+        private Deferred hudBattleProcessDeferred;
 
         public void Init(InputController input)
         {
@@ -26,7 +30,7 @@ namespace Tactics.Battle
             };
         }
 
-        public void StartBattle(UnitState[] userUnitStates, UnitState[] aiUnitStates)
+        public void StartBattle(UnitState[] userUnitStates, UnitState[] aiUnitStates, IPromise hudBattleProcessDeferred)
         {
             unitsUser = new List<UnitShell>();
             unitsAI = new List<UnitShell>();
@@ -34,6 +38,11 @@ namespace Tactics.Battle
             InitUnitsForFaction(Faction.AI, aiUnitStates);
 
             OnBattleInit?.Invoke(unitsUser, unitsAI);
+
+            hudBattleProcessDeferred.Done(() =>
+            {
+                FinishBattle();
+            });
 
 
             void InitUnitsForFaction(Faction faction, UnitState[] units)
@@ -129,7 +138,7 @@ namespace Tactics.Battle
             }
         }
 
-        private void Clean()
+        private void FinishBattle()
         {
             for (int i = unitsUser.Count - 1; i >= 0; i--)
             {
@@ -141,6 +150,8 @@ namespace Tactics.Battle
                 UnitShell unit = unitsAI[i];
                 unit.Die();
             }
+
+            OnBattleFinished?.Invoke();
         }
 
     }

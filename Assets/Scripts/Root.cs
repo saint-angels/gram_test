@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.IO;
 using Tactics.SharedData;
 using Tactics.Configs;
+using Tactics.Helpers.Promises;
 
 namespace Tactics
 {
@@ -33,11 +34,7 @@ namespace Tactics
             profileManager.Init(battleManager, cacheManager);
             levelView.Init(battleManager);
             battleManager.Init(inputController);
-            battleManager.OnUserUnitsSurvived += (survivedUserUnits) =>
-            {
-                // GoMeta();
-            };
-
+            battleManager.OnBattleFinished += () => GoMeta();
             GoMeta();
 
             void GoMeta()
@@ -52,9 +49,10 @@ namespace Tactics
 
             void GoBattle(UnitState[] selectedUnits)
             {
-                uiManager.ShowHUD(battleManager, CameraController, inputController, profileManager);
+                IPromise battleUIProcessingPromise = uiManager.ShowHUD(battleManager, CameraController, inputController, profileManager);
+                //TODO: Make enemy rotation
                 var enemyStates = new UnitState[] { enemiesConfig.enemyStates[0] };
-                battleManager.StartBattle(selectedUnits, enemyStates);
+                battleManager.StartBattle(selectedUnits, enemyStates, battleUIProcessingPromise);
             }
         }
     }
