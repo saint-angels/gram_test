@@ -18,10 +18,10 @@ namespace Tactics.Windows
         [SerializeField] private Text paramIncreaseLabelPrefab = null;
         [SerializeField] private Text damageDealtLabelPrefab = null;
         [SerializeField] private RectTransform healthbarContainerRect = null;
+
         [SerializeField] private GameObject battleResultPanel = null;
         [SerializeField] private Text battleResultLabel = null;
-
-        private float resultPanelShowDuration = 2f;
+        [SerializeField] private Button battleResultConfirmButton = null;
 
         private Dictionary<UnitShell, Healthbar> unitsHealth;
         private CameraController cameraController;
@@ -30,6 +30,14 @@ namespace Tactics.Windows
         private ProfileManager profileManager;
 
         private Deferred battleProcessDeferred;
+
+        private void Awake()
+        {
+            battleResultConfirmButton.onClick.AddListener(() =>
+            {
+                battleProcessDeferred.Resolve();
+            });
+        }
 
         public IPromise Init(Battle.BattleManager battleManager, CameraController cameraController, InputController inputController, ProfileManager profileManager)
         {
@@ -51,13 +59,6 @@ namespace Tactics.Windows
         private void HandleUnitsParamUpgrade(List<UnitState> unitStateDelta)
         {
             Sequence mainSeq = DOTween.Sequence();
-            mainSeq.AppendCallback(() =>
-            {
-                battleResultPanel.gameObject.SetActive(true);
-                bool isVictory = unitStateDelta.Count != 0;
-                battleResultLabel.text = isVictory ? "VICTORY" : "DEFEAT";
-            });
-            mainSeq.AppendInterval(resultPanelShowDuration);
             foreach (var stateDelta in unitStateDelta)
             {
                 foreach (KeyValuePair<UnitShell, Healthbar> kvp in unitsHealth)
@@ -74,13 +75,18 @@ namespace Tactics.Windows
                             TryHandleParamDelta(stateDelta.unitParams.experience, "experience", localPoint.Value, unitSequence);
                             TryHandleParamDelta(stateDelta.unitParams.level, "level", localPoint.Value, unitSequence);
                             //Make all unit sequences run in parallel
-                            mainSeq.Insert(resultPanelShowDuration, unitSequence);
+                            mainSeq.Insert(0, unitSequence);
                         }
                         break;
                     }
                 }
             }
-            mainSeq.OnComplete(() => battleProcessDeferred.Resolve());
+            mainSeq.AppendCallback(() =>
+            {
+                battleResultPanel.gameObject.SetActive(true);
+                bool isVictory = unitStateDelta.Count != 0;
+                battleResultLabel.text = isVictory ? "VICTORY" : "DEFEAT";
+            });
 
             void TryHandleParamDelta(int paramDelta, string paramName, Vector2 uiLocalPoint, Sequence seq)
             {
