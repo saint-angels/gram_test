@@ -9,6 +9,14 @@ namespace Tactics.Battle
 {
     public class BattleManager : MonoBehaviour
     {
+        private enum BattleState
+        {
+            None,
+            WaitingInput,
+            Attacking,
+            Finished,
+        }
+
         public event Action<UnitType[]> OnUserUnitsSurvived;
         public event Action<List<UnitShell>, List<UnitShell>> OnBattleInit;
         public event Action OnBattleFinished;
@@ -18,17 +26,20 @@ namespace Tactics.Battle
 
         private List<UnitShell> unitsUser;
         private List<UnitShell> unitsAI;
-
-        private IPromise unitAttackAnimPromise;
+        private BattleState state;
 
         public void Init(InputController input)
         {
             input.OnUnitClick += (unit) =>
             {
-                bool waitingForInput = unitAttackAnimPromise == null;
-                if (waitingForInput && unit.Faction == Faction.User)
+                switch (state)
                 {
-                    unit.Attack();
+                    case BattleState.WaitingInput:
+                        if (unit.Faction == Faction.User)
+                        {
+                            unit.Attack();
+                        }
+                        break;
                 }
             };
         }
@@ -50,6 +61,8 @@ namespace Tactics.Battle
                 FinishBattle();
             });
 
+            state = BattleState.WaitingInput;
+
 
             void InitUnitsForFaction(Faction faction, UnitState[] units)
             {
@@ -59,10 +72,10 @@ namespace Tactics.Battle
                     UnitShell unit = GameObject.Instantiate(unitPrefab, Vector3.zero, Quaternion.identity, unitContainer);
                     unit.OnAttack += (attacker, damage, attackAnimationPromise) =>
                     {
-                        unitAttackAnimPromise = attackAnimationPromise;
+                        state = BattleState.Attacking;
                         attackAnimationPromise.Done(() =>
                         {
-                            unitAttackAnimPromise = null;
+                            state = BattleState.WaitingInput;
                             var opposingUnits = faction switch
                             {
                                 Faction.User => unitsAI,
@@ -144,8 +157,7 @@ namespace Tactics.Battle
                     }
                     OnUserUnitsSurvived?.Invoke(survivedUnitTypes);
 
-                    return;
-
+                    state = BattleState.Finished;
                 }
             }
         }

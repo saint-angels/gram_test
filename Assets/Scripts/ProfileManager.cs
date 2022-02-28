@@ -42,15 +42,25 @@ namespace Tactics
                     UnitState unitUpgradeDelta = newUnitState.GetDelta(prevUnitState);
                     unitParamsDelta.Add(unitUpgradeDelta);
                 }
-                OnUnitsParamUpgrade?.Invoke(unitParamsDelta);
-                cacheManager.Save<UserSaveState>(saveState, allowOverwrite: true);
-            };
+                saveState.battlesUntilNextUnitUnlock--;
+                bool allUnitsUnlocked = configManager.UnitsCollection.startingStates.Length == saveState.unlockedUnits.Count;
+                bool canUnlockNewUnit = saveState.battlesUntilNextUnitUnlock <= 0;
+                if (allUnitsUnlocked == false && canUnlockNewUnit)
+                {
+                    saveState.battlesUntilNextUnitUnlock = 5;
+                    int newUnitIndex = saveState.unlockedUnits.Count;
+                    UnitState newUnitState = configManager.UnitsCollection.startingStates[newUnitIndex];
+                    saveState.unlockedUnits.Add(newUnitState);
 
+                }
+                cacheManager.Save<UserSaveState>(saveState, allowOverwrite: true);
+                OnUnitsParamUpgrade?.Invoke(unitParamsDelta);
+            };
         }
 
         public UnitState[] GetUnlockedUnits()
         {
-            return GetUserSaveState().unlockedUnits;
+            return GetUserSaveState().unlockedUnits.ToArray();
         }
 
         private UserSaveState GetUserSaveState()

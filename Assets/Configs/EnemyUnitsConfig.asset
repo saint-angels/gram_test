@@ -15,8 +15,8 @@ MonoBehaviour:
   enemyStates:
   - unitType: 1
     unitParams:
-      maxHealth: 50
-      attack: 100
+      maxHealth: 20
+      attack: 2
       experience: 0
       level: 1
   - unitType: 2

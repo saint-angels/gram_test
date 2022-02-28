@@ -8,17 +8,19 @@ namespace Tactics.SharedData
     [System.Serializable]
     public class UserSaveState
     {
-        public UnitState[] unlockedUnits;
+        public List<UnitState> unlockedUnits;
+        public int battlesUntilNextUnitUnlock;
 
         public static UserSaveState Default(UnitsCollectionConfig unitsCollectionConfig)
         {
             var state = new UserSaveState();
-            state.unlockedUnits = new UnitState[]
+            state.unlockedUnits = new List<UnitState>()
             {
                     unitsCollectionConfig.startingStates[0],
                     unitsCollectionConfig.startingStates[1],
                     unitsCollectionConfig.startingStates[2],
             };
+            state.battlesUntilNextUnitUnlock = 5;
             return state;
         }
 
@@ -38,7 +40,7 @@ namespace Tactics.SharedData
 
         public void UpdateUnitState(UnitState newUnitState)
         {
-            for (int i = 0; i < unlockedUnits.Length; i++)
+            for (int i = 0; i < unlockedUnits.Count; i++)
             {
                 if (unlockedUnits[i].unitType == newUnitState.unitType)
                 {
