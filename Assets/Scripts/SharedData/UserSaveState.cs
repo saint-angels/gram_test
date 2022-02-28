@@ -10,6 +10,7 @@ namespace Tactics.SharedData
     {
         public List<UnitState> unlockedUnits;
         public int battlesUntilNextUnitUnlock;
+        public int battlesCount; //Used for changing enemies
 
         public static UserSaveState Default(UnitsCollectionConfig unitsCollectionConfig)
         {
@@ -21,6 +22,7 @@ namespace Tactics.SharedData
                     unitsCollectionConfig.startingStates[2],
             };
             state.battlesUntilNextUnitUnlock = 5;
+            state.battlesCount = 0;
             return state;
         }
 

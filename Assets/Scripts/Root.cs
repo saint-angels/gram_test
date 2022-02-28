@@ -49,7 +49,9 @@ namespace Tactics
             void GoBattle(UnitState[] selectedUnits)
             {
                 IPromise battleUIProcessingPromise = uiManager.ShowHUD(battleManager, cameraController, inputController, profileManager);
-                battleManager.StartBattle(selectedUnits, configManager, battleUIProcessingPromise);
+                int battleCount = profileManager.GetBattleCount();
+                var aiUnitStates = configManager.EnemyUnits.GetAIUnitsForBattleIndex(battleCount);
+                battleManager.StartBattle(selectedUnits, aiUnitStates, battleUIProcessingPromise);
             }
         }
     }

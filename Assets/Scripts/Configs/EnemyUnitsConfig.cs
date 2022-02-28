@@ -10,5 +10,12 @@ namespace Tactics.Configs
     {
         //Every battle has just one enemy
         public UnitState[] enemyStates;
+
+        public UnitState[] GetAIUnitsForBattleIndex(int battleIndex)
+        {
+            int enemyIndex = battleIndex % enemyStates.Length;
+            var aiUnitStates = new UnitState[] { enemyStates[enemyIndex] };
+            return aiUnitStates;
+        }
     }
 }

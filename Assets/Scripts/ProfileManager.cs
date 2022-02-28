@@ -42,7 +42,11 @@ namespace Tactics
                     UnitState unitUpgradeDelta = newUnitState.GetDelta(prevUnitState);
                     unitParamsDelta.Add(unitUpgradeDelta);
                 }
-                saveState.battlesUntilNextUnitUnlock--;
+                //If user unlocked everything, don't make the counter negative
+                if (0 < saveState.battlesUntilNextUnitUnlock)
+                {
+                    saveState.battlesUntilNextUnitUnlock--;
+                }
                 bool allUnitsUnlocked = configManager.UnitsCollection.startingStates.Length == saveState.unlockedUnits.Count;
                 bool canUnlockNewUnit = saveState.battlesUntilNextUnitUnlock <= 0;
                 if (allUnitsUnlocked == false && canUnlockNewUnit)
@@ -53,9 +57,15 @@ namespace Tactics
                     saveState.unlockedUnits.Add(newUnitState);
 
                 }
+                saveState.battlesCount++;
                 cacheManager.Save<UserSaveState>(saveState, allowOverwrite: true);
                 OnUnitsParamUpgrade?.Invoke(unitParamsDelta);
             };
+        }
+
+        public int GetBattleCount()
+        {
+            return GetUserSaveState().battlesCount;
         }
 
         public UnitState[] GetUnlockedUnits()
