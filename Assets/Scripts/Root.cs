@@ -3,14 +3,13 @@ using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using Tactics.SharedData;
-using Tactics.Configs;
 using Tactics.Helpers.Promises;
 
 namespace Tactics
 {
     public class Root : MonoBehaviour
     {
-        public static CameraController CameraController => _instance.cameraController;
+        public static ConfigManager Configs => _instance.configManager;
 
         [SerializeField] private Battle.BattleManager battleManager = null;
         [SerializeField] private View.LevelView levelView = null;
@@ -49,7 +48,7 @@ namespace Tactics
 
             void GoBattle(UnitState[] selectedUnits)
             {
-                IPromise battleUIProcessingPromise = uiManager.ShowHUD(battleManager, CameraController, inputController, profileManager);
+                IPromise battleUIProcessingPromise = uiManager.ShowHUD(battleManager, cameraController, inputController, profileManager);
                 battleManager.StartBattle(selectedUnits, configManager, battleUIProcessingPromise);
             }
         }

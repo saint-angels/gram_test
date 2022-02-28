@@ -414,6 +414,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   enemyUnitsConfig: {fileID: 11400000, guid: 7173a0a39f3c664469804acb6c789147, type: 2}
   unitsCollectionConfig: {fileID: 11400000, guid: af87a0f815b5400deaa8613bbb44b069, type: 2}
+  unitSpritesConfig: {fileID: 11400000, guid: 292dbc69dc63ac7278342887183e74e2, type: 2}
 --- !u!4 &492870735
 Transform:
   m_ObjectHideFlags: 0
@@ -1057,6 +1058,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   unitContainer: {fileID: 658013126}
+  unitPrefab: {fileID: 8266481414919728114, guid: 4828387caade53562be590c241e04f97, type: 3}
 --- !u!4 &1241309744
 Transform:
   m_ObjectHideFlags: 0

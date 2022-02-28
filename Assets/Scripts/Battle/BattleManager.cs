@@ -12,7 +12,9 @@ namespace Tactics.Battle
         public event Action<UnitType[]> OnUserUnitsSurvived;
         public event Action<List<UnitShell>, List<UnitShell>> OnBattleInit;
         public event Action OnBattleFinished;
+
         [SerializeField] private Transform unitContainer;
+        [SerializeField] private UnitShell unitPrefab;
 
         private List<UnitShell> unitsUser;
         private List<UnitShell> unitsAI;
@@ -52,7 +54,6 @@ namespace Tactics.Battle
             {
                 foreach (UnitState unitState in units)
                 {
-                    UnitShell unitPrefab = Resources.Load<UnitShell>($"Units/{unitState.unitType}");
 
                     UnitShell unit = GameObject.Instantiate(unitPrefab, Vector3.zero, Quaternion.identity, unitContainer);
                     unit.OnAttack += (attacker, damage) =>

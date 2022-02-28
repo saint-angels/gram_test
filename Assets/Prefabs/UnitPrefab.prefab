@@ -95,7 +95,7 @@ GameObject:
   - component: {fileID: 1987418719785437241}
   - component: {fileID: 3054374071056716415}
   m_Layer: 0
-  m_Name: Bard
+  m_Name: UnitPrefab
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -140,6 +140,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b145a97479ab091cdb20447b258dabbe, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  renderer: {fileID: 4631426353923543793}
 --- !u!61 &3054374071056716415
 BoxCollider2D:
   m_ObjectHideFlags: 0

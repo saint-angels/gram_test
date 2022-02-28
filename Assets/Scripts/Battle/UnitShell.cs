@@ -10,6 +10,8 @@ namespace Tactics.Battle
 {
     public class UnitShell : MonoBehaviour, ITooltipTextProvider
     {
+        public event Action<UnitType> OnInit;
+
         public IStatefulEvent<int> HealthState => healthState;
 
         public event Action<UnitShell, int> OnAttack;
@@ -27,6 +29,8 @@ namespace Tactics.Battle
             this.UnitType = unitType;
             this.Params = unitParams;
             healthState.Set(unitParams.maxHealth);
+
+            OnInit?.Invoke(unitType);
         }
 
         public void Attack()

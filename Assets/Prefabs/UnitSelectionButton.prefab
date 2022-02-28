@@ -212,7 +212,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   selectionFrame: {fileID: 5230818875586891962}
-  button: {fileID: 5947173971133611277}
+  image: {fileID: 3158047476537591845}
 --- !u!114 &8029117278641810145
 MonoBehaviour:
   m_ObjectHideFlags: 0

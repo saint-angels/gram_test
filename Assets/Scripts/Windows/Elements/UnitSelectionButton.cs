@@ -13,6 +13,7 @@ namespace Tactics.Windows.Elements
         public event Action<UnitSelectionButton> OnClicked;
 
         [SerializeField] private GameObject selectionFrame = null;
+        [SerializeField] private Image image = null;
 
         public UnitState UnitState { get; private set; }
 
@@ -41,6 +42,8 @@ namespace Tactics.Windows.Elements
             OnClicked = null;
             this.UnitState = unitState;
             SetFrameVisible(false);
+
+            image.sprite = Root.Configs.UnitSprites.GetSpriteForUnit(unitState.unitType);
         }
 
         public void SetFrameVisible(bool isVisible)
