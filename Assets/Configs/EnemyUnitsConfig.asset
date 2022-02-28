@@ -16,6 +16,18 @@ MonoBehaviour:
   - unitType: 1
     unitParams:
       maxHealth: 50
+      attack: 100
+      experience: 0
+      level: 0
+  - unitType: 2
+    unitParams:
+      maxHealth: 50
+      attack: 1
+      experience: 0
+      level: 0
+  - unitType: 2
+    unitParams:
+      maxHealth: 50
       attack: 1
       experience: 0
       level: 0

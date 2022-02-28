@@ -17,8 +17,10 @@ namespace Tactics.Windows
         [SerializeField] private Healthbar healthbarPrefab = null;
         [SerializeField] private Text paramIncreaseLabelPrefab = null;
         [SerializeField] private RectTransform healthbarContainerRect = null;
+        [SerializeField] private GameObject battleResultPanel = null;
+        [SerializeField] private Text battleResultLabel = null;
 
-        public float multiplier;
+        private float resultPanelShowDuration = 2f;
 
         private Dictionary<UnitShell, Healthbar> unitsHealth;
         private CameraController cameraController;
@@ -41,12 +43,20 @@ namespace Tactics.Windows
             unitsHealth = new Dictionary<UnitShell, Healthbar>();
             battleProcessDeferred = Deferred.GetFromPool();
 
+
             return battleProcessDeferred;
         }
 
         private void HandleUnitsParamUpgrade(List<UnitState> unitStateDelta)
         {
             Sequence mainSeq = DOTween.Sequence();
+            mainSeq.AppendCallback(() =>
+            {
+                battleResultPanel.gameObject.SetActive(true);
+                bool isVictory = unitStateDelta.Count != 0;
+                battleResultLabel.text = isVictory ? "VICTORY" : "DEFEAT";
+            });
+            mainSeq.AppendInterval(resultPanelShowDuration);
             foreach (var stateDelta in unitStateDelta)
             {
                 foreach (KeyValuePair<UnitShell, Healthbar> kvp in unitsHealth)
@@ -63,7 +73,7 @@ namespace Tactics.Windows
                             TryHandleParamDelta(stateDelta.unitParams.experience, "experience", localPoint.Value, unitSequence);
                             TryHandleParamDelta(stateDelta.unitParams.level, "level", localPoint.Value, unitSequence);
                             //Make all unit sequences run in parallel
-                            mainSeq.Insert(0, unitSequence);
+                            mainSeq.Insert(resultPanelShowDuration, unitSequence);
                         }
                         break;
                     }
@@ -119,6 +129,8 @@ namespace Tactics.Windows
             {
                 profileManager.OnUnitsParamUpgrade -= HandleUnitsParamUpgrade;
             }
+
+            battleResultPanel.SetActive(false);
         }
 
         void LateUpdate()
