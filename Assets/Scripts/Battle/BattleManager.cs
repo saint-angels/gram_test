@@ -44,20 +44,14 @@ namespace Tactics.Battle
             };
         }
 
-        public void StartBattle(UnitState[] userUnitStates, UnitState[] aiUnitStates, IPromise hudBattleProcessDeferred)
+        public void StartBattle(UnitState[] userUnitStates, UnitState[] aiUnitStates)
         {
-
             unitsUser = new List<UnitShell>();
             unitsAI = new List<UnitShell>();
             InitUnitsForFaction(Faction.User, userUnitStates);
             InitUnitsForFaction(Faction.AI, aiUnitStates);
 
             OnBattleInit?.Invoke(unitsUser, unitsAI);
-
-            hudBattleProcessDeferred.Done(() =>
-            {
-                FinishBattle();
-            });
 
             state = BattleState.WaitingInput;
 
@@ -66,8 +60,8 @@ namespace Tactics.Battle
             {
                 foreach (UnitState unitState in units)
                 {
-
                     UnitShell unit = GameObject.Instantiate(unitPrefab, Vector3.zero, Quaternion.identity, unitContainer);
+                    unit.Init(faction, unitState.unitType, unitState.unitParams);
                     unit.OnAttack += (attacker, damage, attackAnimationPromise) =>
                     {
                         state = BattleState.Attacking;
@@ -93,7 +87,7 @@ namespace Tactics.Battle
 
                             if (opposingUnits.Count == 0)
                             {
-                                HandleBattleOver(unit.Faction);
+                                HandleBattleResult(unit.Faction);
                             }
                             else if (attacker.Faction == Faction.User)
                             {
@@ -109,7 +103,6 @@ namespace Tactics.Battle
                         Destroy(deadUnit.gameObject);
 
                     };
-                    unit.Init(faction, unitState.unitType, unitState.unitParams);
                     switch (faction)
                     {
                         case Faction.User:
@@ -134,9 +127,8 @@ namespace Tactics.Battle
                     return units;
                 }
 
-                void HandleBattleOver(Faction winnerFaction)
+                void HandleBattleResult(Faction winnerFaction)
                 {
-                    print($"{winnerFaction} won the battle");
                     switch (winnerFaction)
                     {
                         case Faction.User:
@@ -154,13 +146,12 @@ namespace Tactics.Battle
                         survivedUnitTypes[i] = unit.UnitType;
                     }
                     OnUserUnitsSurvived?.Invoke(survivedUnitTypes);
-
                     state = BattleState.Finished;
                 }
             }
         }
 
-        private void FinishBattle()
+        public void Clean()
         {
             for (int i = unitsUser.Count - 1; i >= 0; i--)
             {
@@ -175,6 +166,5 @@ namespace Tactics.Battle
 
             OnBattleFinished?.Invoke();
         }
-
     }
 }

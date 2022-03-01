@@ -24,8 +24,8 @@ namespace Tactics
 
         public UnitSelectionWindow ShowUnitSelection(UnitState[] availableUnits)
         {
-            battleHUD.gameObject.SetActive(false);
             battleHUD.Clear();
+            battleHUD.gameObject.SetActive(false);
 
             unitSelectionWindow.gameObject.SetActive(true);
             unitSelectionWindow.Init(availableUnits);

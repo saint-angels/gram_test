@@ -25,7 +25,7 @@ namespace Tactics.View
             {
                 float attackOffset = unitShell.Faction == Faction.User ? 1f : -1f;
                 float attackPoint = transform.position.x + attackOffset;
-                var tween = transform.DOMoveX(attackPoint, .3f)
+                var tween = transform.DOMoveX(attackPoint, .2f)
                                         .SetEase(Ease.InFlash, overshoot: 2);
                 tween.OnComplete(() =>
                 {

@@ -12,7 +12,6 @@ namespace Tactics.View
 
         public void Init(BattleManager battleManager)
         {
-
             battleManager.OnBattleInit += (userUnits, enemyUnits) =>
             {
                 for (int i = 0; i < userUnits.Count; i++)

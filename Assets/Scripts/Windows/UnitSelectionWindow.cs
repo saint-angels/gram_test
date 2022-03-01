@@ -17,6 +17,7 @@ namespace Tactics.Windows
         [SerializeField] private UnitSelectionButton unitSelectionButtonPrefab = null;
         [SerializeField] private RectTransform unitSelectionButtonContainer = null;
         [SerializeField] private Button startBattleButton = null;
+        [SerializeField] private bool selectFirstUnitsOnInit;
 
         private List<UnitSelectionButton> unitButtons = new List<UnitSelectionButton>();
         private List<UnitSelectionButton> selectedButtons = new List<UnitSelectionButton>();
@@ -46,10 +47,13 @@ namespace Tactics.Windows
                 button.OnClicked += (clickedButton) => SelectUnitButton(clickedButton);
                 unitButtons.Add(button);
 
-                bool isPartOfDefaultSelection = i < 3;
-                if (isPartOfDefaultSelection)
+                if (selectFirstUnitsOnInit)
                 {
-                    SelectUnitButton(button);
+                    bool isPartOfDefaultSelection = i < 3;
+                    if (isPartOfDefaultSelection)
+                    {
+                        SelectUnitButton(button);
+                    }
                 }
             }
 

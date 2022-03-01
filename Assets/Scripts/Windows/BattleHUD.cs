@@ -200,7 +200,7 @@ namespace Tactics.Windows
                         {
                             Text damageLabel = ObjectPool.Spawn(damageDealtLabelPrefab, localPoint.Value, Quaternion.identity, transform, true);
                             damageLabel.text = $"-{damageValue}";
-                            var tween = damageLabel.rectTransform.DOLocalMoveY(localPoint.Value.y + 10f, .3f);
+                            var tween = damageLabel.rectTransform.DOLocalMoveY(localPoint.Value.y + 5f, .6f);
                             tween.OnComplete(() =>
                             {
                                 ObjectPool.Despawn(damageLabel, true);
