@@ -14,8 +14,7 @@ In production values like these would be defined in config. Here, I hope, this i
 Real production and real teams require more complex structure, which evolves based on unique goals and constraints,
 as well as needs of the team.
 This is a simple project, so I've tried to keep the code simple.
-Trying to future-proof the test project by introducing complexity, so that an imaginary "real" project can benefit from it,
-would take a lot of time, without any visible benefit to this test, imo.
+Trying to future-proof the test project by introducing complexity, so that an imaginary "real" project can benefit from it, would take a lot of time, without any visible benefit to this test, imo.
 I'd happy to chat about how more "real" version of this project might look like.
 
 Also, in professional developer community, there is a popular idea,
