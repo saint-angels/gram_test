@@ -57,6 +57,8 @@ namespace Tactics.Windows
                 }
             }
 
+            startBattleButton.interactable = selectedButtons.Count == 3;
+
             void SelectUnitButton(UnitSelectionButton clickedButton)
             {
                 bool isSelectingUnit = selectedButtons.Contains(clickedButton) == false && selectedButtons.Count < 3;
@@ -75,7 +77,6 @@ namespace Tactics.Windows
 
         public void Clear()
         {
-            print("clearing buttons!");
             //Clear previously spawned buttons
             foreach (var button in unitButtons)
             {
@@ -85,6 +86,7 @@ namespace Tactics.Windows
             selectedButtons.Clear();
 
             OnUnitsSelected = null;
+            startBattleButton.interactable = false;
         }
     }
 }

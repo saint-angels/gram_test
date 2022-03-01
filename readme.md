@@ -1,8 +1,3 @@
-TODO:
-make units not selected by default
-make tooltip delay 3s
-
-
 We will be expecting to receive in a zip file:
 • Source code
 • Documentation (a small documentation about stuff we should be aware of – Unity version,
@@ -24,9 +19,8 @@ would take a lot of time, without any visible benefit to this test, imo.
 I'd happy to chat about how more "real" version of this project might look like.
 
 Also, in professional developer community, there is a popular idea,
-that by separating big methods into smaller ones, you are reducing complexity, even if it doesn't reduce lines of code,
-or obscures linear order of many instructions.
-I don't agree with this idea, so in this projects my method are relatively long and not broken into parts without need.
+that by separating big methods into smaller ones, you are always reducing complexity, even if it doesn't reduce lines of code, or obscures linear order of instructions.
+I don't agree with this idea, so here my methods are relatively long and aren't broken into parts without need.
 As this could be polarizing, I would be happy to discuss the reasons for this, if needed.
 
 Project was developed with Unity 2020.3.17f1

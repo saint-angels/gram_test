@@ -14,7 +14,7 @@ namespace Tactics
         private float buttonDownTimer;
         // private bool activatingClick;
         private UnitShell unitInFocus = null;
-        private const float clickMaxDuration = .5f;
+        private const float clickMaxDuration = 3f;
 
         void Update()
         {
